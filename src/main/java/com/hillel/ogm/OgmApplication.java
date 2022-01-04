@@ -1,4 +1,4 @@
-package com.hillel.ogm.Ogm;
+package com.hillel.ogm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
