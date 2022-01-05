@@ -9,6 +9,7 @@ import com.hillel.ogm.git.impl.GitManagerImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -18,19 +19,18 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Set;
 
-@RequiredArgsConstructor
 @Component
 @Slf4j
 public abstract class AbstractGitRepository<T> implements GitRepository<T> {
 
     private final Class<T> t;
-    private final GitManagerImpl<T> gitManagerImpl;
+    @Autowired
+    private GitManagerImpl<T> gitManagerImpl;
 
-    protected AbstractGitRepository(ApplicationContext apx) {
+    protected AbstractGitRepository() {
         Type t = getClass().getGenericSuperclass();
         ParameterizedType parameterizedType = (ParameterizedType) t;
         this.t = (Class) parameterizedType.getActualTypeArguments()[0];
-        this.gitManagerImpl = (GitManagerImpl<T>) apx.getBean(GitManager.class);
     }
 
     @PostConstruct
@@ -46,7 +46,7 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
             log.error("Model :" + t.getName() + " missing GitModel annotation");
             return false;
         }
-        return 3 == Arrays.stream(t.getDeclaredFields()).filter(field -> annotations.contains(field.getAnnotations()[0].annotationType())).count();
+        return 2 <= Arrays.stream(t.getDeclaredFields()).filter(field -> annotations.contains(field.getAnnotations()[0].annotationType())).count();
     }
 
     private Set<Class<?>> getGitAnnotationSet() {
@@ -56,27 +56,30 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
 
     @Override
     public T getByRepositoryAndRevision(String repository, String revision) {
-
+        return null;
     }
 
     @Override
     public T create(T t) {
+        return null;
 
     }
 
     @Override
     public T update(T t) {
+        return null;
 
     }
 
     @Override
     public T read(T t) {
+        return null;
 
     }
 
     @Override
     public void load(T t) {
-
+        gitManagerImpl.load(t);
     }
 
 
