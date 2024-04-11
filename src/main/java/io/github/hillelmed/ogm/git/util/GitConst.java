@@ -1,4 +1,4 @@
-package com.hillel.ogm.git.util;
+package io.github.hillelmed.ogm.git.util;
 
 public class GitConst {
 

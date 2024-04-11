@@ -1,4 +1,4 @@
-package com.hillel.ogm.git.util;
+package io.github.hillelmed.ogm.git.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -14,13 +14,13 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 @NoArgsConstructor(access = AccessLevel.NONE)
 public class JGitUtil {
 
-    public static InMemoryRepository getInMemoryRepository(String user,String password, String url) throws GitAPIException {
+    public static InMemoryRepository getInMemoryRepository(UsernamePasswordCredentialsProvider credentialsProvider, String url) throws GitAPIException {
         DfsRepositoryDescription description = new DfsRepositoryDescription();
         InMemoryRepository inMemoryRepository = new InMemoryRepository(description);
         try(Git git = new Git(inMemoryRepository)) {
             git.fetch()
                     .setRemote(url)
-                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(user,password))
+                    .setCredentialsProvider(credentialsProvider)
                     .setRefSpecs(new RefSpec(GitConst.REFS_SPEC))
                     .call();
             inMemoryRepository.getObjectDatabase();

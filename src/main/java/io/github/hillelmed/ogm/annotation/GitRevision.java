@@ -1,4 +1,4 @@
-package com.hillel.ogm.annotation;
+package io.github.hillelmed.ogm.annotation;
 
 import java.lang.annotation.*;
 

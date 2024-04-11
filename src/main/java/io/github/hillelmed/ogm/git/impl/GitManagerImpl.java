@@ -1,33 +1,32 @@
-package com.hillel.ogm.dao;
+package io.github.hillelmed.ogm.git.impl;
 
-
-import com.hillel.ogm.annotation.GitModel;
-import com.hillel.ogm.annotation.GitModelAnnotation;
-import com.hillel.ogm.exception.MissingAnnotationException;
-import com.hillel.ogm.git.GitManager;
-import com.hillel.ogm.git.impl.GitManagerImpl;
+import io.github.hillelmed.ogm.annotation.GitModel;
+import io.github.hillelmed.ogm.annotation.GitModelAnnotation;
+import io.github.hillelmed.ogm.config.OgmConfig;
+import io.github.hillelmed.ogm.dao.AbstractGitRepository;
+import io.github.hillelmed.ogm.dao.GitRepository;
+import io.github.hillelmed.ogm.exception.MissingAnnotationException;
+import io.github.hillelmed.ogm.git.GitManager;
+import jakarta.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Set;
 
 @Component
 @Slf4j
-public abstract class AbstractGitRepository<T> implements GitRepository<T> {
+public class GitManagerImpl<T> implements GitManager<T> {
 
-    private final Class<T> t;
     @Autowired
-    private GitManagerImpl<T> gitManagerImpl;
+    private GitRepository<T> gitRepository;
+    protected Class<T> t;
 
-    protected AbstractGitRepository() {
+    protected GitManagerImpl() {
         Type t = getClass().getGenericSuperclass();
         ParameterizedType parameterizedType = (ParameterizedType) t;
         this.t = (Class) parameterizedType.getActualTypeArguments()[0];
@@ -35,14 +34,14 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
 
     @PostConstruct
     public void init() throws MissingAnnotationException {
-        if(!validateModel(t)) {
+        if (!validateModel(t)) {
             throw new MissingAnnotationException("Some annotation missing in git model");
         }
     }
 
-    private boolean validateModel(Class<T> t) {
+    protected boolean validateModel(Class<T> t) {
         Set<Class<?>> annotations = getGitAnnotationSet();
-        if(!t.isAnnotationPresent(GitModel.class)) {
+        if (!t.isAnnotationPresent(GitModel.class)) {
             log.error("Model :" + t.getName() + " missing GitModel annotation");
             return false;
         }
@@ -50,36 +49,37 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
     }
 
     private Set<Class<?>> getGitAnnotationSet() {
-        Reflections reflections = new Reflections("com.hillel.ogm.annotation");
+        Reflections reflections = new Reflections("io.github.hillelmed.ogm.annotation");
         return reflections.getTypesAnnotatedWith(GitModelAnnotation.class);
     }
 
     @Override
     public T getByRepositoryAndRevision(String repository, String revision) {
-        return null;
+        return gitRepository.getByRepositoryAndRevision(repository, revision);
     }
 
     @Override
     public T create(T t) {
-        return null;
-
+        return gitRepository.create(t);
     }
 
     @Override
     public T update(T t) {
-        return null;
-
+        return gitRepository.update(t);
     }
 
     @Override
     public T read(T t) {
-        return null;
-
+        return gitRepository.read(t);
     }
 
     @Override
     public void load(T t) {
-        gitManagerImpl.load(t);
+        try {
+            gitRepository.load(t);
+        } catch (Exception e) {
+            log.error(Arrays.toString(e.getStackTrace()));
+        }
     }
 
 

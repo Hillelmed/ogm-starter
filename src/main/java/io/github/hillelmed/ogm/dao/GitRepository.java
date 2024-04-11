@@ -1,6 +1,7 @@
-package com.hillel.ogm.git;
+package io.github.hillelmed.ogm.dao;
 
-public interface GitManager<T> {
+
+public interface GitRepository<T> {
 
     T getByRepositoryAndRevision(String repository, String revision);
 
