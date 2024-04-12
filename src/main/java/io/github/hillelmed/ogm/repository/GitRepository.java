@@ -3,7 +3,7 @@ package io.github.hillelmed.ogm.repository;
 
 public interface GitRepository<T> {
 
-    T getByRepositoryAndRevision(String repository, String revision);
+    T getByRepositoryAndRevision(Class<T> t, String repository, String revision);
 
     T create(T t);
 

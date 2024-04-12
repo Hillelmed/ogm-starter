@@ -8,6 +8,5 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 public @interface GitFiles {
 
-    String[] exclude() default {""};
-    String[] include() default {"*"};
+    String[] include() default {};
 }

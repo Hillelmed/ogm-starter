@@ -2,31 +2,29 @@ package io.github.hillelmed.ogm.repository;
 
 
 import com.fasterxml.jackson.core.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
+import io.github.hillelmed.ogm.annotation.*;
 import io.github.hillelmed.ogm.config.*;
 import io.github.hillelmed.ogm.domain.*;
-import io.github.hillelmed.ogm.git.util.JGitUtil;
-import io.github.hillelmed.ogm.annotation.*;
+import io.github.hillelmed.ogm.git.util.*;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectLoader;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.treewalk.TreeWalk;
+import lombok.extern.slf4j.*;
+import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.internal.storage.dfs.*;
+import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.revwalk.*;
+import org.eclipse.jgit.transport.*;
+import org.eclipse.jgit.treewalk.*;
 import org.eclipse.jgit.treewalk.filter.*;
+import org.springframework.beans.factory.annotation.*;
 
-import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
+import java.lang.reflect.*;
+import java.nio.charset.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
+import java.util.stream.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,11 +33,23 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
     private final OgmConfig ogmConfig;
     private final ObjectMapper jsonMapper;
     private final XmlMapper xmlMapper;
+    @Qualifier("yamlMapper")
     private final ObjectMapper yamlMapper;
 
     @Override
-    public T getByRepositoryAndRevision(String repository, String revision) {
-        return null;
+    public T getByRepositoryAndRevision(Class<T> tClass, String repository, String revision) {
+        try {
+            T t = tClass.getDeclaredConstructor().newInstance();
+            AtomicReference<Field> repo = new AtomicReference<>();
+            AtomicReference<Field> branch = new AtomicReference<>();
+            setRepositoryAndBranch(t, repo, branch);
+            repo.get().set(t, repository);
+            branch.get().set(t, revision);
+            return getFileOrMapOfFiles(t);
+        } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -51,73 +61,85 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
     @Override
     public T update(T t) {
         return null;
-
     }
 
     @Override
     public T read(T t) {
-        Field repo = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(io.github.hillelmed.ogm.annotation.GitRepository.class)).findFirst().get();
-        Field branch = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitRevision.class)).findFirst().get();
-        repo.setAccessible(true);
-        branch.setAccessible(true);
-        String reposi = null;
-        try {
-            reposi = (String) repo.get(t);
-        } catch (IllegalAccessException e) {
-            log.error(Arrays.toString(e.getStackTrace()));
-        }
-        String branchi = null;
-        try {
-            branchi = (String) branch.get(t);
-        } catch (IllegalAccessException e) {
-            log.error(Arrays.toString(e.getStackTrace()));
-        }
-        Field gitFile = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitFile.class)).findFirst().get();
-        FileType gitFileType = ((GitFile) Arrays.stream(gitFile.getAnnotations()).filter(GitFile.class::isInstance).findFirst().get()).type();
-        String gitFilePath = ((GitFile) Arrays.stream(gitFile.getAnnotations()).filter(GitFile.class::isInstance).findFirst().get()).path();
-        try {
-            return initGitCloneToFile(t, reposi, branchi, gitFileType, gitFilePath);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return getFileOrMapOfFiles(t);
     }
 
     @Override
     public void load(T t) {
-        Field repo = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(io.github.hillelmed.ogm.annotation.GitRepository.class)).findFirst().get();
-        Field branch = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitRevision.class)).findFirst().get();
+        getFileOrMapOfFiles(t);
+    }
+
+
+    private void setRepositoryAndBranch(T t) {
+        setRepositoryAndBranch(t, null, null);
+    }
+
+    private void setRepositoryAndBranch(T t, AtomicReference<Field> fieldRepoAtomic, AtomicReference<Field> fieldBranchAtomic) {
+        Field repo = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(io.github.hillelmed.ogm.annotation.GitRepository.class)).findFirst().orElse(null);
+        Field branch = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitRevision.class)).findFirst().orElse(null);
+        if (repo == null || branch == null) {
+            log.error("Repo or Branch are not according right");
+            return;
+        }
         repo.setAccessible(true);
         branch.setAccessible(true);
+        fieldRepoAtomic.set(repo);
+        fieldBranchAtomic.set(branch);
+    }
+
+    private T getFileOrMapOfFiles(T t) {
+        AtomicReference<Field> repo = new AtomicReference<>();
+        AtomicReference<Field> branch = new AtomicReference<>();
+        setRepositoryAndBranch(t, repo, branch);
         String reposi = null;
         try {
-            reposi = (String) repo.get(t);
+            reposi = (String) repo.get().get(t);
         } catch (IllegalAccessException e) {
             log.error(Arrays.toString(e.getStackTrace()));
         }
         String branchi = null;
         try {
-            branchi = (String) branch.get(t);
+            branchi = (String) branch.get().get(t);
         } catch (IllegalAccessException e) {
             log.error(Arrays.toString(e.getStackTrace()));
         }
         try {
-            initGitCloneToMapFilesAnnotations(t, reposi, branchi);
+            Field gitFile = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitFile.class)).findFirst().orElse(null);
+            if (gitFile != null) {
+                GitFile gitFileAnnotation = ((GitFile) Arrays.stream(gitFile.getAnnotations()).filter(GitFile.class::isInstance).findFirst().orElse(null));
+                if (gitFileAnnotation != null) {
+                    return initGitCloneToFile(t, reposi, branchi, gitFileAnnotation.type(), gitFileAnnotation.path());
+                }
+            } else {
+                Field gitFiles = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitFiles.class)).findFirst().orElse(null);
+                if (gitFiles != null) {
+                    GitFiles gitFilesAnnotation = ((GitFiles) Arrays.stream(gitFiles.getAnnotations()).filter(GitFiles.class::isInstance).findFirst().orElse(null));
+                    if (gitFilesAnnotation != null) {
+                        return initGitCloneToMapFilesAnnotations(t, reposi, branchi, gitFilesAnnotation.include());
+                    }
+                }
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(Arrays.toString(e.getStackTrace()));
         }
-
+        return t;
     }
 
-    private void initGitCloneToMapFilesAnnotations(T t, String repository, String revision) throws Exception {
+    private T initGitCloneToMapFilesAnnotations(T t, String repository, String revision, String[] include) throws Exception {
         final String url = ogmConfig.getUrl() + "/" + repository;
         InMemoryRepository inMemoryRepository = JGitUtil.getInMemoryRepository(ogmConfig.getCredentials(), url);
-        Map<String, String> res = loadRemote(inMemoryRepository, url, revision);
+        Map<String, String> res = loadRemote(inMemoryRepository, url, revision, include);
         Optional<Field> fieldOptional = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitFiles.class)).findFirst();
         if (fieldOptional.isPresent()) {
             Field f = fieldOptional.get();
             f.setAccessible(true);
             f.set(t, res);
         }
+        return t;
     }
 
     private T initGitCloneToFile(T t, String repository, String revision, FileType fileType, String filePath) throws Exception {
@@ -133,7 +155,7 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
         return t;
     }
 
-    private Map<String, String> loadRemote(InMemoryRepository repo, String url, String revision) throws Exception {
+    private Map<String, String> loadRemote(InMemoryRepository repo, String url, String revision, String[] include) throws Exception {
         Git git = new Git(repo);
         git.fetch().setRemote(url).setRefSpecs(new RefSpec("+refs/heads/*:refs/heads/*")).call();
         repo.getObjectDatabase();
@@ -144,6 +166,10 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
         TreeWalk treeWalk = new TreeWalk(repo);
         treeWalk.addTree(tree);
         treeWalk.setRecursive(true);
+        if (include != null && include.length > 0) {
+            Collection<PathFilter> pathFilters = Arrays.stream(include).map(PathFilter::create).toList();
+            treeWalk.setFilter(PathFilterGroup.create(pathFilters));
+        }
         Map<String, String> files = new HashMap<>();
         while (treeWalk.next()) {
             String path = treeWalk.getPathString();
@@ -188,22 +214,22 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
             }
             case XML -> {
                 try {
-                    xmlMapper.readValue(string, JsonNode.class);
-                } catch (JsonProcessingException e) {
+                    return xmlMapper.readValue(string, JsonNode.class);
+                } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
             }
             case JSON -> {
                 try {
                     return jsonMapper.readValue(string, JsonNode.class);
-                } catch (JsonProcessingException e) {
+                } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
             }
             case YAML -> {
                 try {
                     return yamlMapper.readValue(string, JsonNode.class);
-                } catch (JsonProcessingException e) {
+                } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -211,7 +237,6 @@ public abstract class AbstractGitRepository<T> implements GitRepository<T> {
                 return null;
             }
         }
-        return null;
     }
 
 

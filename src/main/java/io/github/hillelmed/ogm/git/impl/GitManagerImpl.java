@@ -1,27 +1,25 @@
 package io.github.hillelmed.ogm.git.impl;
 
-import io.github.hillelmed.ogm.annotation.GitModel;
-import io.github.hillelmed.ogm.annotation.GitModelAnnotation;
+import io.github.hillelmed.ogm.annotation.*;
+import io.github.hillelmed.ogm.exception.*;
+import io.github.hillelmed.ogm.git.*;
 import io.github.hillelmed.ogm.repository.GitRepository;
-import io.github.hillelmed.ogm.exception.MissingAnnotationException;
-import io.github.hillelmed.ogm.git.GitManager;
 import jakarta.annotation.*;
-import lombok.extern.slf4j.Slf4j;
-import org.reflections.Reflections;
+import lombok.extern.slf4j.*;
+import org.reflections.*;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.*;
 
 import java.lang.reflect.*;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Component
 public class GitManagerImpl<T> implements GitManager<T> {
 
+    protected Class<T> t;
     @Autowired
     private GitRepository<T> gitRepository;
-    protected Class<T> t;
 
     public GitManagerImpl() {
         Type t = getClass().getGenericSuperclass();
@@ -52,7 +50,7 @@ public class GitManagerImpl<T> implements GitManager<T> {
 
     @Override
     public T getByRepositoryAndRevision(String repository, String revision) {
-        return gitRepository.getByRepositoryAndRevision(repository, revision);
+        return gitRepository.getByRepositoryAndRevision(t, repository, revision);
     }
 
     @Override

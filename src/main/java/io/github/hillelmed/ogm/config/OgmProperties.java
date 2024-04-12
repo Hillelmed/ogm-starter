@@ -4,7 +4,8 @@ import lombok.*;
 import org.springframework.boot.context.properties.*;
 
 @Data
-@ConfigurationProperties(prefix = "spring.data.git")
+@ConfigurationProperties(prefix = "ogm.data.git")
+@EnableConfigurationProperties
 public class OgmProperties {
 
     private String url;

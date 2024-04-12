@@ -6,9 +6,9 @@ import com.fasterxml.jackson.dataformat.yaml.*;
 import io.github.hillelmed.ogm.repository.*;
 import lombok.*;
 import org.eclipse.jgit.transport.*;
+import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.properties.*;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 
 import static io.github.hillelmed.ogm.util.OgmAppUtil.*;
 
@@ -20,19 +20,21 @@ public class GeneralBeanConfig {
     private final OgmProperties properties;
 
     @Bean
+    @ConditionalOnMissingBean
     public ObjectMapper jsonMapper() {
         return new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public XmlMapper xmlMapper() {
         XmlMapper xmlMapper = new XmlMapper();
         xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return xmlMapper;
     }
 
-    @Bean
+    @Bean(value = "yamlMapper")
     public ObjectMapper yamlMapper() {
         ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
         yamlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -40,12 +42,14 @@ public class GeneralBeanConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public AbstractGitRepository abstractGitRepository() {
-        return new AbstractGitRepository<>(ogmConfig(),jsonMapper(),xmlMapper(),yamlMapper()) {
+        return new AbstractGitRepository<>(ogmConfig(), jsonMapper(), xmlMapper(), yamlMapper()) {
         };
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public OgmConfig ogmConfig() {
         OgmConfig config = new OgmConfig();
         config.setCredentials(new UsernamePasswordCredentialsProvider(getUser(), getPass()));
