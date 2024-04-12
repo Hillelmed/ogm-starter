@@ -2,13 +2,10 @@ package io.github.hillelmed.ogm.git.impl;
 
 import io.github.hillelmed.ogm.annotation.GitModel;
 import io.github.hillelmed.ogm.annotation.GitModelAnnotation;
-import io.github.hillelmed.ogm.config.OgmConfig;
-import io.github.hillelmed.ogm.dao.AbstractGitRepository;
-import io.github.hillelmed.ogm.dao.GitRepository;
+import io.github.hillelmed.ogm.repository.GitRepository;
 import io.github.hillelmed.ogm.exception.MissingAnnotationException;
 import io.github.hillelmed.ogm.git.GitManager;
 import jakarta.annotation.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.*;
@@ -18,15 +15,15 @@ import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.Set;
 
-@Component
 @Slf4j
+@Component
 public class GitManagerImpl<T> implements GitManager<T> {
 
     @Autowired
     private GitRepository<T> gitRepository;
     protected Class<T> t;
 
-    protected GitManagerImpl() {
+    public GitManagerImpl() {
         Type t = getClass().getGenericSuperclass();
         ParameterizedType parameterizedType = (ParameterizedType) t;
         this.t = (Class) parameterizedType.getActualTypeArguments()[0];

@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.dao;
+package io.github.hillelmed.ogm.repository;
 
 
 public interface GitRepository<T> {

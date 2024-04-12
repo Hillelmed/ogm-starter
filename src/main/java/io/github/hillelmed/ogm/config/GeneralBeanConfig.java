@@ -1,10 +1,11 @@
 package io.github.hillelmed.ogm.config;
 
-import io.github.hillelmed.ogm.dao.*;
-import jakarta.annotation.*;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.dataformat.xml.*;
+import com.fasterxml.jackson.dataformat.yaml.*;
+import io.github.hillelmed.ogm.repository.*;
 import lombok.*;
 import org.eclipse.jgit.transport.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.context.properties.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,19 +20,38 @@ public class GeneralBeanConfig {
     private final OgmProperties properties;
 
     @Bean
+    public ObjectMapper jsonMapper() {
+        return new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    @Bean
+    public XmlMapper xmlMapper() {
+        XmlMapper xmlMapper = new XmlMapper();
+        xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return xmlMapper;
+    }
+
+    @Bean
+    public ObjectMapper yamlMapper() {
+        ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
+        yamlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return yamlMapper;
+    }
+
+    @Bean
     public AbstractGitRepository abstractGitRepository() {
-        return new AbstractGitRepository<>(config()) {
+        return new AbstractGitRepository<>(ogmConfig(),jsonMapper(),xmlMapper(),yamlMapper()) {
         };
     }
 
     @Bean
-    public OgmConfig config() {
+    public OgmConfig ogmConfig() {
         OgmConfig config = new OgmConfig();
         config.setCredentials(new UsernamePasswordCredentialsProvider(getUser(), getPass()));
         config.setUrl(getEp());
         return config;
     }
-
 
     private String getEnvOrProp(final String keyEnv, final String keyProp) {
         return System.getenv(keyEnv) == null ? System.getProperty(keyProp) : System.getenv(keyEnv);
