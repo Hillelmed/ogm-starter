@@ -3,9 +3,6 @@ package io.github.hillelmed.ogm.config;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
 import com.fasterxml.jackson.dataformat.yaml.*;
-import io.github.hillelmed.ogm.framework.*;
-import io.github.hillelmed.ogm.repository.*;
-import net.bytebuddy.utility.*;
 import org.eclipse.jgit.transport.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -16,7 +13,6 @@ import org.springframework.context.support.*;
 import org.springframework.core.type.filter.*;
 import org.springframework.stereotype.*;
 
-import java.lang.reflect.*;
 import java.util.*;
 
 import static io.github.hillelmed.ogm.util.OgmAppUtil.*;
@@ -27,7 +23,7 @@ public class GeneralBeanConfig {
 
     private final OgmProperties properties;
     private final GenericApplicationContext genericApplicationContext;
-    private ClassPathScanningCandidateComponentProvider provider;
+    private final ClassPathScanningCandidateComponentProvider provider;
 
     public GeneralBeanConfig(OgmProperties properties, GenericApplicationContext genericApplicationContext) {
         this.properties = properties;
