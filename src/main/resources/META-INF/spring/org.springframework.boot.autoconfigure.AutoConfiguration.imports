@@ -1,1 +1,2 @@
 io.github.hillelmed.ogm.config.GeneralBeanConfig
+io.github.hillelmed.ogm.config.RepositoryBeanFactory

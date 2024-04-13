@@ -41,14 +41,14 @@ public class GeneralBeanConfig {
         provider.addIncludeFilter(new AnnotationTypeFilter(Repository.class, true, true));
     }
 
-    @Bean
+    @Bean(name = "jsonMapper")
     @ConditionalOnMissingBean
     public ObjectMapper jsonMapper() {
         return new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-    @Bean
+    @Bean(name = "xmlMapper")
     @ConditionalOnMissingBean
     public XmlMapper xmlMapper() {
         XmlMapper xmlMapper = new XmlMapper();
@@ -56,7 +56,7 @@ public class GeneralBeanConfig {
         return xmlMapper;
     }
 
-    @Bean(value = "yamlMapper")
+    @Bean(name = "yamlMapper")
     public ObjectMapper yamlMapper() {
         ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
         yamlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -73,7 +73,7 @@ public class GeneralBeanConfig {
     }
 
 
-    @Bean
+    @Bean(name = "listOfRepository")
     public List<String> repositoryClients() {
         final Set<BeanDefinition> classes = provider.findCandidateComponents("*");
         List<String> names = new ArrayList<>();
@@ -88,18 +88,18 @@ public class GeneralBeanConfig {
         return names;
     }
 
-    @Bean
-    public <T> T getProxy() throws ClassNotFoundException {
-        List<String> client = repositoryClients();
-        String name = client.get(0);
-
-        Class<?> clazzTypeTGeneric = Class.forName(((ParameterizedType) Class.forName(name).getAnnotatedInterfaces()[0].getType()).getActualTypeArguments()[0].getTypeName());
-        Class<?> clazzToRegistry = Class.forName(name);
-
-        GitRepositoryImpl bean = new GitRepositoryImpl(ogmConfig(), jsonMapper(), xmlMapper(), yamlMapper(), clazzTypeTGeneric);
-
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]), new DynamicRepositoryInvocationHandler(bean));
-    }
+//    @Bean
+//    public <T> T getProxy() throws ClassNotFoundException {
+//        List<String> client = repositoryClients();
+//        String name = client.get(0);
+//
+//        Class<?> clazzTypeTGeneric = Class.forName(((ParameterizedType) Class.forName(name).getAnnotatedInterfaces()[0].getType()).getActualTypeArguments()[0].getTypeName());
+//        Class<?> clazzToRegistry = Class.forName(name);
+//
+//        GitRepositoryImpl bean = new GitRepositoryImpl(ogmConfig(), jsonMapper(), xmlMapper(), yamlMapper(), clazzTypeTGeneric);
+//
+//        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]), new DynamicRepositoryInvocationHandler(bean));
+//    }
 
 
 //    public void registerBeanDefinitions(List<String> names) {
