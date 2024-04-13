@@ -1,5 +1,8 @@
-package io.github.hillelmed.ogm.git.util;
+package io.github.hillelmed.ogm.util;
 
+import lombok.*;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GitConst {
 
     public static final String GIT_REF = "refs/heads/";

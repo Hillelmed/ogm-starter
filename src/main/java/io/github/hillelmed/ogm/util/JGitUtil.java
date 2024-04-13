@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.git.util;
+package io.github.hillelmed.ogm.util;
 
 import lombok.*;
 import lombok.extern.slf4j.*;
