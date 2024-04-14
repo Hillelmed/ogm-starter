@@ -5,6 +5,8 @@ import com.fasterxml.jackson.dataformat.xml.*;
 import io.github.hillelmed.ogm.domain.*;
 import lombok.*;
 
+import java.io.*;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OgmAppUtil {
 
@@ -21,6 +23,42 @@ public class OgmAppUtil {
 
     public static final String GIT_PASSWORD_PROP = "ogm.password";
     public static final String GIT_PASSWORD_ENV = GIT_PASSWORD_PROP.replaceAll("\\.", "_").toUpperCase();
+
+    public static void writeFileByType(XmlMapper xmlMapper,
+                                       ObjectMapper jsonMapper,
+                                       ObjectMapper yamlMapper,
+                                       FileType fileType, Object content, String path) throws IOException {
+        FileWriter fileWriter = new FileWriter(path);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        switch (fileType) {
+            case TEXT_PLAIN -> printWriter.print(content);
+            case XML -> {
+                try {
+                    printWriter.print(xmlMapper.writeValueAsString(content));
+                } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            case JSON -> {
+                try {
+                    printWriter.print(jsonMapper.writeValueAsString(content));
+                } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            case YAML -> {
+                try {
+                    printWriter.print(yamlMapper.writeValueAsString(content));
+                } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            default -> {
+                throw new RuntimeException("Unsupported file type: " + fileType);
+            }
+        }
+        printWriter.close();
+    }
 
     public static Object readByType(XmlMapper xmlMapper,
                                     ObjectMapper jsonMapper,
