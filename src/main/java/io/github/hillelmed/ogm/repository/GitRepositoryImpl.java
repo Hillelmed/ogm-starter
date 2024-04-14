@@ -6,13 +6,10 @@ import com.fasterxml.jackson.dataformat.xml.*;
 import io.github.hillelmed.ogm.annotation.*;
 import io.github.hillelmed.ogm.config.*;
 import io.github.hillelmed.ogm.domain.*;
-import io.github.hillelmed.ogm.exception.*;
 import io.github.hillelmed.ogm.util.*;
-import jakarta.annotation.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.eclipse.jgit.internal.storage.dfs.*;
-import org.reflections.*;
 import org.springframework.beans.factory.annotation.*;
 
 import java.lang.reflect.*;
@@ -29,28 +26,6 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
     @Qualifier("yamlMapper")
     private final ObjectMapper yamlMapper;
     private final Class<T> clazzType;
-
-
-    @PostConstruct
-    public void init() throws MissingAnnotationException {
-        if (!validateModel(clazzType)) {
-            throw new MissingAnnotationException("Some annotation missing in git model");
-        }
-    }
-
-    protected boolean validateModel(Class<T> t) {
-        Set<Class<?>> annotations = getGitAnnotationSet();
-        if (!t.isAnnotationPresent(GitModel.class)) {
-            log.error("Model :" + t.getName() + " missing GitModel annotation");
-            return false;
-        }
-        return 2 <= Arrays.stream(t.getDeclaredFields()).filter(field -> annotations.contains(field.getAnnotations()[0].annotationType())).count();
-    }
-
-    private Set<Class<?>> getGitAnnotationSet() {
-        Reflections reflections = new Reflections("io.github.hillelmed.ogm.annotation");
-        return reflections.getTypesAnnotatedWith(GitModelAnnotation.class);
-    }
 
     @Override
     public T getByRepositoryAndRevision(String repository, String revision) {

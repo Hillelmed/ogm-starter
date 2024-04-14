@@ -1,17 +1,12 @@
 package io.github.hillelmed.ogm.framework;
 
 import io.github.hillelmed.ogm.repository.*;
-import lombok.*;
 import lombok.extern.slf4j.*;
 
 import java.lang.reflect.*;
 
 @Slf4j
-@Data
-@RequiredArgsConstructor
-public class DynamicRepositoryInvocationHandler implements InvocationHandler {
-
-    private final GitRepositoryImpl gitRepository;
+public record DynamicRepositoryInvocationHandler(GitRepositoryImpl gitRepository) implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
@@ -27,7 +22,6 @@ public class DynamicRepositoryInvocationHandler implements InvocationHandler {
                 return gitRepository.create(args[0]);
             case "update":
                 return gitRepository.update(args[0]);
-
             default:
                 throw new IllegalStateException("Unexpected value: " + method.getName());
         }

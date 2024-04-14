@@ -9,7 +9,6 @@ import org.springframework.beans.factory.config.*;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.properties.*;
 import org.springframework.context.annotation.*;
-import org.springframework.context.support.*;
 import org.springframework.core.type.filter.*;
 import org.springframework.stereotype.*;
 
@@ -22,12 +21,10 @@ import static io.github.hillelmed.ogm.util.OgmAppUtil.*;
 public class GeneralBeanConfig {
 
     private final OgmProperties properties;
-    private final GenericApplicationContext genericApplicationContext;
     private final ClassPathScanningCandidateComponentProvider provider;
 
-    public GeneralBeanConfig(OgmProperties properties, GenericApplicationContext genericApplicationContext) {
+    public GeneralBeanConfig(OgmProperties properties) {
         this.properties = properties;
-        this.genericApplicationContext = genericApplicationContext;
         provider = new ClassPathScanningCandidateComponentProvider(false) {
             @Override
             protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
@@ -83,60 +80,6 @@ public class GeneralBeanConfig {
         }
         return names;
     }
-
-//    @Bean
-//    public <T> T getProxy() throws ClassNotFoundException {
-//        List<String> client = repositoryClients();
-//        String name = client.get(0);
-//
-//        Class<?> clazzTypeTGeneric = Class.forName(((ParameterizedType) Class.forName(name).getAnnotatedInterfaces()[0].getType()).getActualTypeArguments()[0].getTypeName());
-//        Class<?> clazzToRegistry = Class.forName(name);
-//
-//        GitRepositoryImpl bean = new GitRepositoryImpl(ogmConfig(), jsonMapper(), xmlMapper(), yamlMapper(), clazzTypeTGeneric);
-//
-//        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]), new DynamicRepositoryInvocationHandler(bean));
-//    }
-
-
-//    public void registerBeanDefinitions(List<String> names) {
-//        names.forEach(
-//                this::register
-//        );
-//    }
-//
-//
-//    private void register(String name) {
-//        try {
-//            if (((ParameterizedType) Class.forName(name).getAnnotatedInterfaces()[0].getType()).getRawType().getTypeName().equals(GitRepository.class.getName())) {
-//                Class<?> clazzTypeTGeneric = Class.forName(((ParameterizedType) Class.forName(name).getAnnotatedInterfaces()[0].getType()).getActualTypeArguments()[0].getTypeName());
-//                Class<?> clazzToRegistry = Class.forName(name);
-//
-////                BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(AbstractGitRepository.class);
-////                builder.addPropertyValue("ogmConfig", ogmConfig());
-////                builder.addPropertyValue("objectMapper", objectMapper());
-//////                builder.addPropertyValue("xmlMapper", xmlMapper());
-//////                builder.addPropertyValue("yamlMapper", yamlMapper());
-////                builder.addPropertyValue("clazzType", clazzTypeTGeneric);
-////                ProxyFactory factory = new ProxyFactory(new SimplePojo());
-////                factory.addInterface(Pojo.class);
-////                factory.addAdvice(new RetryAdvice());
-////                factory.setExposeProxy(true);
-////                GitRepository proxyInstance = (GitRepository) Proxy.newProxyInstance(
-////                        OgmConfig.class.getClassLoader(),
-////                        new Class[] { GitRepository.class },
-////                        new DynamicRepositoryInvocationHandler());
-//
-////                GitRepositoryImpl bean = new GitRepositoryImpl();
-////                InvocationHandler handler = new DynamicRepositoryInvocationHandler(bean);
-////                Object proxyObj = Proxy.newProxyInstance(OgmConfig.class.getClassLoader(), clazzToRegistry.getInterfaces(), handler);
-//
-////                genericApplicationContext.registerBean(Object.class, new Object());
-////                genericApplicationContext.registerBeanDefinition(clazzToRegistry.getName(), builder.getBeanDefinition());
-//            }
-//        } catch (ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     private String getEnvOrProp(final String keyEnv, final String keyProp) {
         return System.getenv(keyEnv) == null ? System.getProperty(keyProp) : System.getenv(keyEnv);

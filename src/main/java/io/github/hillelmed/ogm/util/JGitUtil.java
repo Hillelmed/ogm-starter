@@ -39,16 +39,7 @@ public class JGitUtil {
     }
 
     public static Map<String, String> loadRemote(InMemoryRepository repo, String url, String revision, String[] include) throws Exception {
-        Git git = new Git(repo);
-        git.fetch().setRemote(url).setRefSpecs(new RefSpec("+refs/heads/*:refs/heads/*")).call();
-        repo.getObjectDatabase();
-        ObjectId lastCommitId = repo.resolve("refs/heads/" + revision);
-        RevWalk revWalk = new RevWalk(repo);
-        RevCommit commit = revWalk.parseCommit(lastCommitId);
-        RevTree tree = commit.getTree();
-        TreeWalk treeWalk = new TreeWalk(repo);
-        treeWalk.addTree(tree);
-        treeWalk.setRecursive(true);
+        TreeWalk treeWalk = loadGit(repo, url, revision);
         if (include != null && include.length > 0) {
             Collection<PathFilter> pathFilters = Arrays.stream(include).map(PathFilter::create).toList();
             treeWalk.setFilter(PathFilterGroup.create(pathFilters));
@@ -65,11 +56,7 @@ public class JGitUtil {
         return files;
     }
 
-    public static Object loadRemoteSpesificFile(
-            XmlMapper xmlMapper,
-            ObjectMapper jsonMapper,
-            ObjectMapper yamlMapper,
-            InMemoryRepository repo, String url, String revision, FileType fileType, String pathFile) throws Exception {
+    private static TreeWalk loadGit(InMemoryRepository repo, String url, String revision) throws GitAPIException, IOException {
         Git git = new Git(repo);
         git.fetch().setRemote(url).setRefSpecs(new RefSpec("+refs/heads/*:refs/heads/*")).call();
         repo.getObjectDatabase();
@@ -80,6 +67,15 @@ public class JGitUtil {
         TreeWalk treeWalk = new TreeWalk(repo);
         treeWalk.addTree(tree);
         treeWalk.setRecursive(true);
+        return treeWalk;
+    }
+
+    public static Object loadRemoteSpesificFile(
+            XmlMapper xmlMapper,
+            ObjectMapper jsonMapper,
+            ObjectMapper yamlMapper,
+            InMemoryRepository repo, String url, String revision, FileType fileType, String pathFile) throws Exception {
+        TreeWalk treeWalk = loadGit(repo, url, revision);
         treeWalk.setFilter(PathFilter.create(pathFile));
         while (treeWalk.next()) {
             String path = treeWalk.getPathString();
