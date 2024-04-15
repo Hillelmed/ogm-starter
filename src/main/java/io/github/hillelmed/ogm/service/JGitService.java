@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.util;
+package io.github.hillelmed.ogm.service;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.yaml.*;
 import io.github.hillelmed.ogm.annotation.*;
 import io.github.hillelmed.ogm.config.*;
 import io.github.hillelmed.ogm.domain.*;
+import io.github.hillelmed.ogm.util.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.eclipse.jgit.api.*;
@@ -26,7 +27,7 @@ import static io.github.hillelmed.ogm.util.OgmAppUtil.*;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JGitUtil {
+public class JGitService {
 
     private final ObjectMapper jsonMapper;
     private final XmlMapper xmlMapper;

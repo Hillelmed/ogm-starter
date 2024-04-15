@@ -1,13 +1,10 @@
 package io.github.hillelmed.ogm.repository;
 
 
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.dataformat.xml.*;
-import com.fasterxml.jackson.dataformat.yaml.*;
 import io.github.hillelmed.ogm.annotation.*;
 import io.github.hillelmed.ogm.config.*;
 import io.github.hillelmed.ogm.domain.*;
-import io.github.hillelmed.ogm.util.*;
+import io.github.hillelmed.ogm.service.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.eclipse.jgit.api.*;
@@ -23,7 +20,8 @@ import java.util.concurrent.atomic.*;
 public class GitRepositoryImpl<T> implements GitRepository<T> {
 
     private final OgmConfig ogmConfig;
-    private final JGitUtil jGitUtil;
+    private final JGitService jGitService;
+    private final ReflectionService<T> reflectionService;
     private final Class<T> clazzType;
 
     @Override
@@ -32,9 +30,8 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
             T t = clazzType.getDeclaredConstructor().newInstance();
             AtomicReference<Field> repo = new AtomicReference<>();
             AtomicReference<Field> branch = new AtomicReference<>();
-            setRepositoryAndBranch(t, repo, branch);
-            repo.get().set(t, repository);
-            branch.get().set(t, revision);
+            reflectionService.extractRepositoryAndBranch(t, repo, branch);
+            reflectionService.setRepositoryAndBranch(t, repo, branch, repository, revision);
             return getFileOrMapOfFiles(t);
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {
@@ -47,7 +44,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
     public T create(T t) {
         AtomicReference<Field> repo = new AtomicReference<>();
         AtomicReference<Field> branch = new AtomicReference<>();
-        setRepositoryAndBranch(t, repo, branch);
+        reflectionService.extractRepositoryAndBranch(t, repo, branch);
         try {
             String repositoryFieldValue = (String) repo.get().get(t);
             String branchFieldValue = (String) branch.get().get(t);
@@ -58,7 +55,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
                     gitFile.setAccessible(true);
                     Class<?> fieldType = gitFile.getType();
                     Object object = fieldType.cast(gitFile.get(t));
-                    jGitUtil.writeFileAndPush(ogmConfig, repositoryFieldValue, branchFieldValue, object, gitFileAnnotation);
+                    jGitService.writeFileAndPush(ogmConfig, repositoryFieldValue, branchFieldValue, object, gitFileAnnotation);
                 } else {
                     throw new FileNotFoundException(repositoryFieldValue);
                 }
@@ -100,7 +97,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
     private T getFileOrMapOfFiles(T t) {
         AtomicReference<Field> repo = new AtomicReference<>();
         AtomicReference<Field> branch = new AtomicReference<>();
-        setRepositoryAndBranch(t, repo, branch);
+        reflectionService.extractRepositoryAndBranch(t, repo, branch);
         try {
             String repositoryFieldValue = (String) repo.get().get(t);
             String branchFieldValue = (String) branch.get().get(t);
@@ -125,36 +122,24 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
         return t;
     }
 
-    private void setRepositoryAndBranch(T t, AtomicReference<Field> fieldRepoAtomic, AtomicReference<Field> fieldBranchAtomic) {
-        Field repo = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(io.github.hillelmed.ogm.annotation.GitRepository.class)).findFirst().orElse(null);
-        Field branch = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitRevision.class)).findFirst().orElse(null);
-        if (repo == null || branch == null) {
-            log.error("Repo or Branch are not according right");
-            return;
-        }
-        repo.setAccessible(true);
-        branch.setAccessible(true);
-        fieldRepoAtomic.set(repo);
-        fieldBranchAtomic.set(branch);
-    }
 
     private T initGitCloneToMapFilesAnnotations(T t, String repository, String revision, String[] include) throws IllegalAccessException, IOException, GitAPIException {
         final String url = ogmConfig.getUrl() + "/" + repository;
-        Git gitInMemoryRepository = jGitUtil.getGitInMemory(ogmConfig.getCredentials(), url);
-        Map<String, String> res = jGitUtil.loadRemote(gitInMemoryRepository, revision, include);
+        Git gitInMemoryRepository = jGitService.getGitInMemory(ogmConfig.getCredentials(), url);
+        Map<String, String> allData = jGitService.loadRemote(gitInMemoryRepository, revision, include);
         Optional<Field> fieldOptional = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitFiles.class)).findFirst();
         if (fieldOptional.isPresent()) {
             Field f = fieldOptional.get();
             f.setAccessible(true);
-            f.set(t, res);
+            f.set(t, allData);
         }
         return t;
     }
 
     private T initGitCloneToFile(T t, String repository, String revision, FileType fileType, String filePath) throws IllegalAccessException, IOException, GitAPIException {
         final String url = ogmConfig.getUrl() + "/" + repository;
-        Git gitInMemoryRepository = jGitUtil.getGitInMemory(ogmConfig.getCredentials(), url);
-        Object res = jGitUtil.loadRemoteSpesificFile(gitInMemoryRepository, revision, fileType, filePath);
+        Git gitInMemoryRepository = jGitService.getGitInMemory(ogmConfig.getCredentials(), url);
+        Object res = jGitService.loadRemoteSpesificFile(gitInMemoryRepository, revision, fileType, filePath);
         Optional<Field> fieldOptional = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitFile.class)).findFirst();
         if (fieldOptional.isPresent()) {
             Field f = fieldOptional.get();

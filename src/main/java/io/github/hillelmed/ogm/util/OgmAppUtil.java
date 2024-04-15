@@ -1,6 +1,5 @@
 package io.github.hillelmed.ogm.util;
 
-import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
 import com.fasterxml.jackson.dataformat.yaml.*;
