@@ -64,7 +64,10 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
                     throw new RuntimeException(e);
                 }
 
-                GitRepositoryImpl gitRepository = new GitRepositoryImpl(ogmConfig, new JGitService(jsonMapper, xmlMapper, yamlMapper), new ReflectionService(), clazzTypeTGeneric);
+                GitRepositoryImpl gitRepository = new GitRepositoryImpl(ogmConfig,
+                        new JGitService(jsonMapper, xmlMapper, yamlMapper),
+                        new ReflectionService(),
+                        clazzTypeTGeneric);
 
                 String beanName = clazzToRegistry.getName();
                 Object proxyInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]), new DynamicRepositoryInvocationHandler(gitRepository));
