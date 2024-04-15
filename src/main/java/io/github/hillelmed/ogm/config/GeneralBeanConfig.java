@@ -12,12 +12,10 @@ import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.properties.*;
 import org.springframework.context.*;
 import org.springframework.context.annotation.*;
-import org.springframework.core.annotation.*;
 import org.springframework.core.type.filter.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
-import java.util.stream.*;
 
 import static io.github.hillelmed.ogm.util.OgmAppUtil.*;
 
