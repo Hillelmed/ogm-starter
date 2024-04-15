@@ -43,7 +43,6 @@ public class JGitService {
                         .setCredentialsProvider(credentialsProvider)
                         .setRefSpecs(new RefSpec(GitConst.REFS_SPEC))
                         .call();
-                inMemoryRepository.getObjectDatabase();
                 return git;
             } catch (GitAPIException e) {
                 log.error(e.getMessage());

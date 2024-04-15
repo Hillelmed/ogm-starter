@@ -7,13 +7,17 @@ import com.fasterxml.jackson.dataformat.yaml.*;
 import org.eclipse.jgit.transport.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
+import org.springframework.boot.autoconfigure.*;
 import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.properties.*;
+import org.springframework.context.*;
 import org.springframework.context.annotation.*;
+import org.springframework.core.annotation.*;
 import org.springframework.core.type.filter.*;
 import org.springframework.stereotype.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 import static io.github.hillelmed.ogm.util.OgmAppUtil.*;
 
@@ -23,9 +27,11 @@ public class GeneralBeanConfig {
 
     private final OgmProperties properties;
     private final ClassPathScanningCandidateComponentProvider provider;
+    private final ApplicationContext applicationContext;
 
-    public GeneralBeanConfig(OgmProperties properties) {
+    public GeneralBeanConfig(OgmProperties properties, ApplicationContext applicationContext) {
         this.properties = properties;
+        this.applicationContext = applicationContext;
         provider = new ClassPathScanningCandidateComponentProvider(false) {
             @Override
             protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
@@ -73,7 +79,7 @@ public class GeneralBeanConfig {
 
     @Bean(name = "listOfRepository")
     public List<String> repositoryClients() {
-        final Set<BeanDefinition> classes = provider.findCandidateComponents("*");
+        final Set<BeanDefinition> classes = provider.findCandidateComponents(getBasePackagePath());
         List<String> names = new ArrayList<>();
         for (BeanDefinition bean : classes) {
             try {
@@ -84,6 +90,19 @@ public class GeneralBeanConfig {
             }
         }
         return names;
+    }
+
+    private String getBasePackagePath() {
+        Map<String, Object> candidates = applicationContext.getBeansWithAnnotation(SpringBootApplication.class);
+        Class<?> aClass = candidates.isEmpty() ? null : candidates.values().toArray()[0].getClass();
+        if (aClass != null) {
+            String[] basePackageSplitter = aClass.getName().split("\\.");
+            List<String> basePackage = new ArrayList<>(Arrays.stream(basePackageSplitter).toList());
+            basePackage.remove(basePackage.size() - 1);
+            return String.join(".", basePackage);
+        } else {
+            return "*";
+        }
     }
 
     private String getEnvOrProp(final String keyEnv, final String keyProp) {
