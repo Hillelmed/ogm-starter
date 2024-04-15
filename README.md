@@ -1,7 +1,9 @@
 # OGM (Object Git Mapping)
+![Alt text](/attachments/OgmExamplePic.png)
 
-Java Spring starter that work with git like ORM but for git mapping
-Support Java 17 and 21
+**Java Spring starter library that linked your code to Git like ORM**
+
+**Support Java 17 and 21**
 
 ## Setup
 
