@@ -17,7 +17,6 @@ import org.eclipse.jgit.treewalk.*;
 import org.eclipse.jgit.treewalk.filter.*;
 
 import java.io.*;
-import java.lang.reflect.*;
 import java.nio.charset.*;
 import java.nio.file.*;
 import java.util.*;
@@ -106,13 +105,19 @@ public class JGitUtil {
                                         ObjectMapper yamlMapper,
                                         String repositoryFieldValue,
                                         String branchFieldValue,
-                                        Field gitFile,
-                                        GitFile gitFileAnnotation
-    ) throws IOException, IllegalAccessException {
+                                        Object content,
+                                        GitFile gitFileAnnotation) throws IOException, IllegalAccessException {
         File tmpdir = Files.createTempDirectory("OgmJGit").toFile();
-        try (Git git = Git.cloneRepository().setCredentialsProvider(ogmConfig.getCredentials()).setURI(ogmConfig.getUrl() + "/" + repositoryFieldValue).setBranch("refs/heads/" + branchFieldValue)
-                .setGitDir(tmpdir).call()) {
-            OgmAppUtil.writeFileByType(xmlMapper, jsonMapper, yamlMapper, gitFileAnnotation.type(), gitFile.get(new Object()), gitFileAnnotation.path());
+        FolderFileUtil.setWritable(tmpdir.toPath());
+        try (Git git = Git.cloneRepository()
+                .setBare(false)
+                .setCredentialsProvider(ogmConfig.getCredentials())
+                .setBranch(GitConst.GIT_REF + branchFieldValue)
+                .setURI(ogmConfig.getUrl() + "/" + repositoryFieldValue)
+                .setDirectory(tmpdir)
+                .call()) {
+            OgmAppUtil.writeFileByType(xmlMapper, jsonMapper, yamlMapper, gitFileAnnotation.type(), content, git.getRepository().getDirectory()
+                    .getAbsolutePath().replace(".git", "") + gitFileAnnotation.path());
             git.add().addFilepattern(".").call();
             git.commit().setMessage("Change file:" + gitFileAnnotation.path()).call();
             // push to remote:

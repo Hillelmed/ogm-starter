@@ -59,7 +59,10 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
             if (gitFile != null) {
                 GitFile gitFileAnnotation = ((GitFile) Arrays.stream(gitFile.getAnnotations()).filter(GitFile.class::isInstance).findFirst().orElse(null));
                 if (gitFileAnnotation != null) {
-                    JGitUtil.writeFileAndPush(ogmConfig, xmlMapper, jsonMapper, yamlMapper, repositoryFieldValue, branchFieldValue, gitFile, gitFileAnnotation);
+                    gitFile.setAccessible(true);
+                    Class<?> fieldType = gitFile.getType();
+                    Object object = fieldType.cast(gitFile.get(t));
+                    JGitUtil.writeFileAndPush(ogmConfig, xmlMapper, jsonMapper, yamlMapper, repositoryFieldValue, branchFieldValue, object, gitFileAnnotation);
                 } else {
                     throw new FileNotFoundException(repositoryFieldValue);
                 }
@@ -73,7 +76,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
                 }
             }
         } catch (Exception e) {
-            log.error(Arrays.toString(e.getStackTrace()));
+            log.error(e.getMessage());
         }
         return t;
 

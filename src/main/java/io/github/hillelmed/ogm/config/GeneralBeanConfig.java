@@ -38,13 +38,14 @@ public class GeneralBeanConfig {
     @ConditionalOnMissingBean
     public ObjectMapper jsonMapper() {
         return new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     @Bean(name = "xmlMapper")
     @ConditionalOnMissingBean
     public XmlMapper xmlMapper() {
         XmlMapper xmlMapper = new XmlMapper();
+        xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
         xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return xmlMapper;
     }
@@ -52,6 +53,7 @@ public class GeneralBeanConfig {
     @Bean(name = "yamlMapper")
     public ObjectMapper yamlMapper() {
         ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
+        yamlMapper.enable(SerializationFeature.INDENT_OUTPUT);
         yamlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return yamlMapper;
     }
