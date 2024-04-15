@@ -1,4 +1,5 @@
 # OGM (Object Git Mapping)
+
 ![Alt text](/attachments/OgmExamplePic.png)
 
 **Java Spring starter library that linked your code to Git like ORM**
@@ -7,10 +8,20 @@
 
 ## Setup
 
-The starter will scan your base package from `@SpringBootApplication` And search interface that have
-annotations `@Repository`
-And extend to `GitRepository<T>` Interface and send T `@GitModel`
-Example of `GitModel` class:
+Add to your dependencies: (Maven example: Latest release)
+
+```
+<dependency>
+  <groupId>io.github.hillelmed</groupId>
+  <artifactId>ogm-starter</artifactId>
+  <version>X.Y.Z</version>
+  <classifier>sources|tests|javadoc|all</classifier> (Optional)
+</dependency>
+```
+
+The starter will scan your base package from `@SpringBootApplication` annotation And search interface that have
+annotations `@Repository` And also extend to `GitRepository<T>` Interface with `@GitModel` `<T> generic type`
+Example of `GitModel` class that class will be the `<T>`:
 
 ```
 @GitModel
@@ -29,7 +40,7 @@ public class GitPomFile {
 }
 ```
 
-Example of GitRepository class
+Example of GitRepository class:
 
 ```
 @Repository
@@ -57,7 +68,7 @@ public class MyRepo {
 }
 ```
 
-Example of uses (Load file from git and change the version and push):
+Example of uses (Get file from git, change the version of the pom.xml file and push):
 
 ```
 MyRepoForSpesificFile myRepoForSpesificFile = appContext.getBean(MyRepoForSpesificFile.class);
@@ -67,19 +78,6 @@ myRepoForSpesificFile.update(repoPomFile);
 ```
 
 **Note**: Instead of appContext.getBean() we can use constructor injection or @Autowired
-
-## Latest release
-
-Can be found in maven like so:
-
-```
-<dependency>
-  <groupId>io.github.hillelmed</groupId>
-  <artifactId>ogm-starter</artifactId>
-  <version>X.Y.Z</version>
-  <classifier>sources|tests|javadoc|all</classifier> (Optional)
-</dependency>
-```
 
 ## Documentation
 
