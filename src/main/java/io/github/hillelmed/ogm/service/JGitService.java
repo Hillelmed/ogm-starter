@@ -103,7 +103,7 @@ public class JGitService {
     public void writeFileAndPush(OgmConfig ogmConfig, String repositoryFieldValue,
                                  String branchFieldValue,
                                  Object content,
-                                 GitFile gitFileAnnotation) throws IOException {
+                                 GitFile gitFileAnnotation, boolean isUpdateExistFile) throws IOException {
         File tmpdir = Files.createTempDirectory("OgmJGit").toFile();
         FolderFileUtil.setWritable(tmpdir.toPath());
         try (Git git = Git.cloneRepository()
@@ -113,8 +113,12 @@ public class JGitService {
                 .setURI(ogmConfig.getUrl() + "/" + repositoryFieldValue)
                 .setDirectory(tmpdir)
                 .call()) {
-            OgmAppUtil.writeFileByType(xmlMapper, jsonMapper, yamlMapper, gitFileAnnotation.type(), content, git.getRepository().getDirectory()
-                    .getAbsolutePath().replace(".git", "") + gitFileAnnotation.path());
+            String filePath = git.getRepository().getDirectory()
+                    .getAbsolutePath().replace(".git", "") + gitFileAnnotation.path();
+            if (isUpdateExistFile && !new File(filePath).exists()) {
+                throw new UnsupportedEncodingException("File does not exist use create for create the file");
+            }
+            OgmAppUtil.writeFileByType(xmlMapper, jsonMapper, yamlMapper, gitFileAnnotation.type(), content, filePath);
             git.add().addFilepattern(".").call();
             git.commit().setMessage("Change file:" + gitFileAnnotation.path()).call();
             // push to remote:

@@ -42,6 +42,30 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
 
     @Override
     public T create(T t) {
+        return createFileAndPush(t);
+    }
+
+
+    @Override
+    public T update(T t) {
+        return createFileAndPush(t, true);
+    }
+
+    @Override
+    public T read(T t) {
+        return getFileOrMapOfFiles(t);
+    }
+
+    @Override
+    public void load(T t) {
+        getFileOrMapOfFiles(t);
+    }
+
+    private T createFileAndPush(T t) {
+        return createFileAndPush(t, false);
+    }
+
+    private T createFileAndPush(T t, boolean isUpdateExistFile) {
         AtomicReference<Field> repo = new AtomicReference<>();
         AtomicReference<Field> branch = new AtomicReference<>();
         reflectionService.extractRepositoryAndBranch(t, repo, branch);
@@ -55,7 +79,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
                     gitFile.setAccessible(true);
                     Class<?> fieldType = gitFile.getType();
                     Object object = fieldType.cast(gitFile.get(t));
-                    jGitService.writeFileAndPush(ogmConfig, repositoryFieldValue, branchFieldValue, object, gitFileAnnotation);
+                    jGitService.writeFileAndPush(ogmConfig, repositoryFieldValue, branchFieldValue, object, gitFileAnnotation,isUpdateExistFile);
                 } else {
                     throw new FileNotFoundException(repositoryFieldValue);
                 }
@@ -76,22 +100,6 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
         }
         return t;
 
-    }
-
-
-    @Override
-    public T update(T t) {
-        return null;
-    }
-
-    @Override
-    public T read(T t) {
-        return getFileOrMapOfFiles(t);
-    }
-
-    @Override
-    public void load(T t) {
-        getFileOrMapOfFiles(t);
     }
 
     private T getFileOrMapOfFiles(T t) {
