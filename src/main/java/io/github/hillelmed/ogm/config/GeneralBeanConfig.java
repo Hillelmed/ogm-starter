@@ -57,7 +57,7 @@ public class GeneralBeanConfig {
         YAMLMapper yamlMapper = new YAMLMapper();
         yamlMapper.enable(SerializationFeature.INDENT_OUTPUT);
         yamlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        yamlMapper.configure(YAMLGenerator.Feature.WRITE_DOC_START_MARKER,false);
+        yamlMapper.configure(YAMLGenerator.Feature.WRITE_DOC_START_MARKER, false);
         return yamlMapper;
     }
 

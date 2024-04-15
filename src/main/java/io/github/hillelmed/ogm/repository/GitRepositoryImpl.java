@@ -11,12 +11,9 @@ import io.github.hillelmed.ogm.util.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.eclipse.jgit.api.*;
-import org.eclipse.jgit.internal.storage.dfs.*;
-import org.springframework.beans.factory.annotation.*;
 
 import java.io.*;
 import java.lang.reflect.*;
-import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
