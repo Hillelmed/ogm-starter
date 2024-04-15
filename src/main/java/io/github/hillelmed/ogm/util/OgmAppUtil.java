@@ -1,5 +1,6 @@
 package io.github.hillelmed.ogm.util;
 
+import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
 import com.fasterxml.jackson.dataformat.yaml.*;
@@ -17,13 +18,13 @@ public class OgmAppUtil {
 
 
     public static final String ENDPOINT_PROP = "ogm.endpoint";
-    public static final String ENDPOINT_ENV = ENDPOINT_PROP.replaceAll("\\.", "_").toUpperCase();
+    public static final String ENDPOINT_ENV = ENDPOINT_PROP.replace("\\.", "_").toUpperCase();
 
     public static final String GIT_USER_PROP = "ogm.user";
-    public static final String GIT_USER_ENV = GIT_USER_PROP.replaceAll("\\.", "_").toUpperCase();
+    public static final String GIT_USER_ENV = GIT_USER_PROP.replace("\\.", "_").toUpperCase();
 
     public static final String GIT_PASSWORD_PROP = "ogm.password";
-    public static final String GIT_PASSWORD_ENV = GIT_PASSWORD_PROP.replaceAll("\\.", "_").toUpperCase();
+    public static final String GIT_PASSWORD_ENV = GIT_PASSWORD_PROP.replace("\\.", "_").toUpperCase();
 
     public static void writeFileByType(XmlMapper xmlMapper,
                                        ObjectMapper jsonMapper,
@@ -54,9 +55,7 @@ public class OgmAppUtil {
                     throw new RuntimeException(e);
                 }
             }
-            default -> {
-                throw new RuntimeException("Unsupported file type: " + fileType);
-            }
+            default -> throw new RuntimeException("Unsupported file type: " + fileType);
         }
         printWriter.close();
     }

@@ -8,6 +8,7 @@ import io.github.hillelmed.ogm.exception.*;
 import io.github.hillelmed.ogm.framework.*;
 import io.github.hillelmed.ogm.repository.GitRepository;
 import io.github.hillelmed.ogm.repository.*;
+import io.github.hillelmed.ogm.util.*;
 import jakarta.annotation.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
@@ -63,7 +64,7 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
                     throw new RuntimeException(e);
                 }
 
-                GitRepositoryImpl gitRepository = new GitRepositoryImpl(ogmConfig, jsonMapper, xmlMapper, yamlMapper, clazzTypeTGeneric);
+                GitRepositoryImpl gitRepository = new GitRepositoryImpl(ogmConfig, new JGitUtil(jsonMapper, xmlMapper, yamlMapper), clazzTypeTGeneric);
 
                 String beanName = clazzToRegistry.getName();
                 Object proxyInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]), new DynamicRepositoryInvocationHandler(gitRepository));

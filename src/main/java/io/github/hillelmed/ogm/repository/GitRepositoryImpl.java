@@ -11,6 +11,7 @@ import io.github.hillelmed.ogm.util.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.eclipse.jgit.api.*;
+import org.eclipse.jgit.api.errors.*;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -22,9 +23,7 @@ import java.util.concurrent.atomic.*;
 public class GitRepositoryImpl<T> implements GitRepository<T> {
 
     private final OgmConfig ogmConfig;
-    private final ObjectMapper jsonMapper;
-    private final XmlMapper xmlMapper;
-    private final YAMLMapper yamlMapper;
+    private final JGitUtil jGitUtil;
     private final Class<T> clazzType;
 
     @Override
@@ -59,7 +58,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
                     gitFile.setAccessible(true);
                     Class<?> fieldType = gitFile.getType();
                     Object object = fieldType.cast(gitFile.get(t));
-                    JGitUtil.writeFileAndPush(ogmConfig, xmlMapper, jsonMapper, yamlMapper, repositoryFieldValue, branchFieldValue, object, gitFileAnnotation);
+                    jGitUtil.writeFileAndPush(ogmConfig, repositoryFieldValue, branchFieldValue, object, gitFileAnnotation);
                 } else {
                     throw new FileNotFoundException(repositoryFieldValue);
                 }
@@ -67,6 +66,9 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
                 Field gitFiles = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitFiles.class)).findFirst().orElse(null);
                 if (gitFiles != null) {
                     GitFiles gitFilesAnnotation = ((GitFiles) Arrays.stream(gitFiles.getAnnotations()).filter(GitFiles.class::isInstance).findFirst().orElse(null));
+                    gitFiles.setAccessible(true);
+//                    Class<?> fieldType = gitFiles.getType();
+//                    Map<String, String> object = (Map<String, String>) fieldType.cast(gitFiles.get(t));
                     if (gitFilesAnnotation != null) {
                         throw new UnsupportedOperationException("Not support yes");
                     }
@@ -136,10 +138,10 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
         fieldBranchAtomic.set(branch);
     }
 
-    private T initGitCloneToMapFilesAnnotations(T t, String repository, String revision, String[] include) throws Exception {
+    private T initGitCloneToMapFilesAnnotations(T t, String repository, String revision, String[] include) throws IllegalAccessException, IOException, GitAPIException {
         final String url = ogmConfig.getUrl() + "/" + repository;
-        Git gitInMemoryRepository = JGitUtil.getGitInMemory(ogmConfig.getCredentials(), url);
-        Map<String, String> res = JGitUtil.loadRemote(gitInMemoryRepository, revision, include);
+        Git gitInMemoryRepository = jGitUtil.getGitInMemory(ogmConfig.getCredentials(), url);
+        Map<String, String> res = jGitUtil.loadRemote(gitInMemoryRepository, revision, include);
         Optional<Field> fieldOptional = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitFiles.class)).findFirst();
         if (fieldOptional.isPresent()) {
             Field f = fieldOptional.get();
@@ -149,10 +151,10 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
         return t;
     }
 
-    private T initGitCloneToFile(T t, String repository, String revision, FileType fileType, String filePath) throws Exception {
+    private T initGitCloneToFile(T t, String repository, String revision, FileType fileType, String filePath) throws IllegalAccessException, IOException, GitAPIException {
         final String url = ogmConfig.getUrl() + "/" + repository;
-        Git gitInMemoryRepository = JGitUtil.getGitInMemory(ogmConfig.getCredentials(), url);
-        Object res = JGitUtil.loadRemoteSpesificFile(xmlMapper, jsonMapper, yamlMapper, gitInMemoryRepository, revision, fileType, filePath);
+        Git gitInMemoryRepository = jGitUtil.getGitInMemory(ogmConfig.getCredentials(), url);
+        Object res = jGitUtil.loadRemoteSpesificFile(gitInMemoryRepository, revision, fileType, filePath);
         Optional<Field> fieldOptional = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitFile.class)).findFirst();
         if (fieldOptional.isPresent()) {
             Field f = fieldOptional.get();

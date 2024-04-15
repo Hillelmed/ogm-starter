@@ -25,10 +25,14 @@ import java.util.*;
 import static io.github.hillelmed.ogm.util.OgmAppUtil.*;
 
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.NONE)
+@RequiredArgsConstructor
 public class JGitUtil {
 
-    public static Git getGitInMemory(UsernamePasswordCredentialsProvider credentialsProvider, String url) throws GitAPIException {
+    private final ObjectMapper jsonMapper;
+    private final XmlMapper xmlMapper;
+    private final YAMLMapper yamlMapper;
+
+    public Git getGitInMemory(UsernamePasswordCredentialsProvider credentialsProvider, String url) throws GitAPIException {
         DfsRepositoryDescription description = new DfsRepositoryDescription();
         InMemoryRepository inMemoryRepository = new InMemoryRepository(description);
         try (Git git = new Git(inMemoryRepository)) {
@@ -47,7 +51,7 @@ public class JGitUtil {
         }
     }
 
-    public static Map<String, String> loadRemote(Git git, String revision, String[] include) throws IOException {
+    public Map<String, String> loadRemote(Git git, String revision, String[] include) throws IOException {
         TreeWalk treeWalk = loadGit(git, revision);
         InMemoryRepository repo = (InMemoryRepository) git.getRepository();
         if (include != null && include.length > 0) {
@@ -66,7 +70,7 @@ public class JGitUtil {
         return files;
     }
 
-    private static TreeWalk loadGit(Git git, String revision) throws IOException {
+    private TreeWalk loadGit(Git git, String revision) throws IOException {
         InMemoryRepository repo = (InMemoryRepository) git.getRepository();
         ObjectId lastCommitId = repo.resolve("refs/heads/" + revision);
         RevWalk revWalk = new RevWalk(repo);
@@ -78,11 +82,7 @@ public class JGitUtil {
         return treeWalk;
     }
 
-    public static Object loadRemoteSpesificFile(
-            XmlMapper xmlMapper,
-            ObjectMapper jsonMapper,
-            YAMLMapper yamlMapper,
-            Git gitInMemoryRepository, String revision, FileType fileType, String pathFile) throws Exception {
+    public Object loadRemoteSpesificFile(Git gitInMemoryRepository, String revision, FileType fileType, String pathFile) throws IOException {
         TreeWalk treeWalk = loadGit(gitInMemoryRepository, revision);
         InMemoryRepository repo = (InMemoryRepository) gitInMemoryRepository.getRepository();
         treeWalk.setFilter(PathFilter.create(pathFile));
@@ -100,14 +100,10 @@ public class JGitUtil {
     }
 
 
-    public static void writeFileAndPush(OgmConfig ogmConfig,
-                                        XmlMapper xmlMapper,
-                                        ObjectMapper jsonMapper,
-                                        YAMLMapper yamlMapper,
-                                        String repositoryFieldValue,
-                                        String branchFieldValue,
-                                        Object content,
-                                        GitFile gitFileAnnotation) throws IOException, IllegalAccessException {
+    public void writeFileAndPush(OgmConfig ogmConfig, String repositoryFieldValue,
+                                 String branchFieldValue,
+                                 Object content,
+                                 GitFile gitFileAnnotation) throws IOException {
         File tmpdir = Files.createTempDirectory("OgmJGit").toFile();
         FolderFileUtil.setWritable(tmpdir.toPath());
         try (Git git = Git.cloneRepository()
