@@ -119,9 +119,11 @@ Missing
 ## Components
 
 - Spring Core
-- Reflection
+- Reflections
 - Lombok \- used to create immutable value types both
 - Proxy bean
+- Jgit (eclipse)
+- Jackson-databind (JSON,YAML,XML)
 
 ## Testing
 
