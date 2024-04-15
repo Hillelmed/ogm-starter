@@ -2,6 +2,7 @@ package io.github.hillelmed.ogm.config;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
+import com.fasterxml.jackson.dataformat.yaml.*;
 import io.github.hillelmed.ogm.annotation.*;
 import io.github.hillelmed.ogm.exception.*;
 import io.github.hillelmed.ogm.framework.*;
@@ -30,7 +31,7 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
     @Qualifier("jsonMapper")
     private final ObjectMapper jsonMapper;
     @Qualifier("yamlMapper")
-    private final ObjectMapper yamlMapper;
+    private final YAMLMapper yamlMapper;
     @Qualifier("xmlMapper")
     private final XmlMapper xmlMapper;
     private BeanFactory beanFactory;

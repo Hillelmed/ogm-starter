@@ -2,6 +2,7 @@ package io.github.hillelmed.ogm.config;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
+import com.fasterxml.jackson.dataformat.xml.ser.*;
 import com.fasterxml.jackson.dataformat.yaml.*;
 import org.eclipse.jgit.transport.*;
 import org.springframework.beans.factory.annotation.*;
@@ -46,15 +47,17 @@ public class GeneralBeanConfig {
     public XmlMapper xmlMapper() {
         XmlMapper xmlMapper = new XmlMapper();
         xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        xmlMapper.enable(ToXmlGenerator.Feature.UNWRAP_ROOT_OBJECT_NODE);
         xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return xmlMapper;
     }
 
     @Bean(name = "yamlMapper")
-    public ObjectMapper yamlMapper() {
-        ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
+    public YAMLMapper yamlMapper() {
+        YAMLMapper yamlMapper = new YAMLMapper();
         yamlMapper.enable(SerializationFeature.INDENT_OUTPUT);
         yamlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        yamlMapper.configure(YAMLGenerator.Feature.WRITE_DOC_START_MARKER,false);
         return yamlMapper;
     }
 

@@ -2,6 +2,7 @@ package io.github.hillelmed.ogm.util;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
+import com.fasterxml.jackson.dataformat.yaml.*;
 import io.github.hillelmed.ogm.annotation.*;
 import io.github.hillelmed.ogm.config.*;
 import io.github.hillelmed.ogm.domain.*;
@@ -80,7 +81,7 @@ public class JGitUtil {
     public static Object loadRemoteSpesificFile(
             XmlMapper xmlMapper,
             ObjectMapper jsonMapper,
-            ObjectMapper yamlMapper,
+            YAMLMapper yamlMapper,
             Git gitInMemoryRepository, String revision, FileType fileType, String pathFile) throws Exception {
         TreeWalk treeWalk = loadGit(gitInMemoryRepository, revision);
         InMemoryRepository repo = (InMemoryRepository) gitInMemoryRepository.getRepository();
@@ -102,7 +103,7 @@ public class JGitUtil {
     public static void writeFileAndPush(OgmConfig ogmConfig,
                                         XmlMapper xmlMapper,
                                         ObjectMapper jsonMapper,
-                                        ObjectMapper yamlMapper,
+                                        YAMLMapper yamlMapper,
                                         String repositoryFieldValue,
                                         String branchFieldValue,
                                         Object content,

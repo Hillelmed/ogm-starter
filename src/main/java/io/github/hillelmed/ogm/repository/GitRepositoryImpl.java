@@ -3,6 +3,7 @@ package io.github.hillelmed.ogm.repository;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
+import com.fasterxml.jackson.dataformat.yaml.*;
 import io.github.hillelmed.ogm.annotation.*;
 import io.github.hillelmed.ogm.config.*;
 import io.github.hillelmed.ogm.domain.*;
@@ -26,8 +27,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
     private final OgmConfig ogmConfig;
     private final ObjectMapper jsonMapper;
     private final XmlMapper xmlMapper;
-    @Qualifier("yamlMapper")
-    private final ObjectMapper yamlMapper;
+    private final YAMLMapper yamlMapper;
     private final Class<T> clazzType;
 
     @Override

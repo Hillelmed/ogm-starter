@@ -2,6 +2,7 @@ package io.github.hillelmed.ogm.util;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
+import com.fasterxml.jackson.dataformat.yaml.*;
 import io.github.hillelmed.ogm.domain.*;
 import lombok.*;
 
@@ -26,7 +27,7 @@ public class OgmAppUtil {
 
     public static void writeFileByType(XmlMapper xmlMapper,
                                        ObjectMapper jsonMapper,
-                                       ObjectMapper yamlMapper,
+                                       YAMLMapper yamlMapper,
                                        FileType fileType, Object content, String path) throws IOException {
         FileWriter fileWriter = new FileWriter(path);
         PrintWriter printWriter = new PrintWriter(fileWriter);
@@ -62,7 +63,7 @@ public class OgmAppUtil {
 
     public static Object readByType(XmlMapper xmlMapper,
                                     ObjectMapper jsonMapper,
-                                    ObjectMapper yamlMapper,
+                                    YAMLMapper yamlMapper,
                                     FileType fileType, String string) {
         switch (fileType) {
             case TEXT_PLAIN -> {
