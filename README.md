@@ -118,7 +118,7 @@ Missing
 
 ## Components
 
-- Spring Core
+- Spring Starter
 - Reflections
 - Lombok \- used to create immutable value types both
 - Proxy bean
