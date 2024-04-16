@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.framework;
+package io.github.hillelmed.ogm.invocation;
 
 import io.github.hillelmed.ogm.repository.*;
 import lombok.extern.slf4j.*;
@@ -18,8 +18,8 @@ public record DynamicRepositoryInvocationHandler(GitRepositoryImpl gitRepository
             case "load":
                 gitRepository.load(args[0]);
                 break;
-            case "create":
-                return gitRepository.create(args[0]);
+            case "sync":
+                return gitRepository.sync(args[0]);
             case "update":
                 return gitRepository.update(args[0]);
             default:

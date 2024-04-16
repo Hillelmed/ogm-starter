@@ -75,7 +75,7 @@ public class GeneralBeanConfig {
     }
 
 
-    @Bean(name = "listOfRepository")
+    @Bean(name = "listOfRepositoriesClass")
     public List<String> repositoryClients() {
         final Set<BeanDefinition> classes = provider.findCandidateComponents(getBasePackagePath());
         List<String> names = new ArrayList<>();

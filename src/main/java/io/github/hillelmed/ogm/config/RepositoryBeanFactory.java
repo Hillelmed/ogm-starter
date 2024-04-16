@@ -5,7 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.*;
 import com.fasterxml.jackson.dataformat.yaml.*;
 import io.github.hillelmed.ogm.annotation.*;
 import io.github.hillelmed.ogm.exception.*;
-import io.github.hillelmed.ogm.framework.*;
+import io.github.hillelmed.ogm.invocation.*;
 import io.github.hillelmed.ogm.repository.GitRepository;
 import io.github.hillelmed.ogm.repository.*;
 import io.github.hillelmed.ogm.service.*;
@@ -27,7 +27,7 @@ import java.util.*;
 @Slf4j
 public class RepositoryBeanFactory implements BeanFactoryAware {
 
-    private final List<String> listOfRepository;
+    private final List<String> listOfRepositoriesClass;
     private final OgmConfig ogmConfig;
     @Qualifier("jsonMapper")
     private final ObjectMapper jsonMapper;
@@ -47,7 +47,7 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
         ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
 
         try {
-            listOfRepository.forEach(name -> {
+            listOfRepositoriesClass.forEach(name -> {
                 Class<?> clazzTypeTGeneric;
                 Class<?> clazzToRegistry;
                 try {
@@ -66,8 +66,7 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
 
                 GitRepositoryImpl gitRepository = new GitRepositoryImpl(ogmConfig,
                         new JGitService(jsonMapper, xmlMapper, yamlMapper),
-                        new ReflectionService(),
-                        clazzTypeTGeneric);
+                        new ReflectionService(clazzTypeTGeneric));
 
                 String beanName = clazzToRegistry.getName();
                 Object proxyInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]), new DynamicRepositoryInvocationHandler(gitRepository));
@@ -94,7 +93,7 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
     private boolean validateModel(Class<?> t) {
         Set<Class<?>> annotations = getGitAnnotationSet();
         if (!t.isAnnotationPresent(GitModel.class)) {
-            log.error("Model :" + t.getName() + " missing GitModel annotation");
+            log.error("Model :{} missing GitModel annotation", t.getName());
             return false;
         }
         return 2 <= Arrays.stream(t.getDeclaredFields()).filter(field -> annotations.contains(field.getAnnotations()[0].annotationType())).count();

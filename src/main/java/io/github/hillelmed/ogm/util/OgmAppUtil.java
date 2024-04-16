@@ -7,6 +7,7 @@ import io.github.hillelmed.ogm.domain.*;
 import lombok.*;
 
 import java.io.*;
+import java.util.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OgmAppUtil {
@@ -24,6 +25,19 @@ public class OgmAppUtil {
 
     public static final String GIT_PASSWORD_PROP = "ogm.password";
     public static final String GIT_PASSWORD_ENV = GIT_PASSWORD_PROP.replace("\\.", "_").toUpperCase();
+
+    public static void findTypeAndWriteFile(XmlMapper xmlMapper,
+                                            ObjectMapper jsonMapper,
+                                            YAMLMapper yamlMapper,
+                                            Object content, String path) throws IOException {
+        String fileExtension = getFileExtension(path);
+        Optional<FileType> fileType = Arrays.stream(FileType.values()).filter(type -> type.name().equals(fileExtension)).findAny();
+        if (fileType.isPresent()) {
+            writeFileByType(xmlMapper, jsonMapper, yamlMapper, fileType.get(), content, path);
+        } else {
+            writeFileByType(xmlMapper, jsonMapper, yamlMapper, FileType.TEXT_PLAIN, content, path);
+        }
+    }
 
     public static void writeFileByType(XmlMapper xmlMapper,
                                        ObjectMapper jsonMapper,
@@ -92,6 +106,14 @@ public class OgmAppUtil {
                 return null;
             }
         }
+    }
+
+    public static String getFileExtension(String fileName) {
+        if (fileName == null) {
+            return "";
+        }
+        int dotIndex = fileName.lastIndexOf('.');
+        return dotIndex > 0 ? fileName.substring(dotIndex + 1) : "";
     }
 
 }

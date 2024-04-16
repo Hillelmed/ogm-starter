@@ -1,5 +1,16 @@
 package io.github.hillelmed.ogm.domain;
 
 public enum FileType {
-    JSON, XML, YAML, TEXT_PLAIN
+
+
+    JSON(new String[]{".json"}),
+    XML(new String[]{".xml"}),
+    YAML(new String[]{".yml", ".yaml"}),
+    TEXT_PLAIN(new String[]{});
+
+    final String[] suffix;
+
+    FileType(String[] suffix) {
+        this.suffix = suffix;
+    }
 }

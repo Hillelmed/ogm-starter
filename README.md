@@ -48,7 +48,7 @@ public interface MyRepoForSpesificFile extends GitRepository<GitPomFile> {
 }
 ```
 
-We can get all the files from repo by `@GitFiles` annotations and `Map<String,String>`
+We can get all the files from repo by `@GitFiles` annotations and `GitRepositoryMap`
 Example of Call load change the version and update the Git:
 
 ```
@@ -63,7 +63,7 @@ public class MyRepo {
     private String branch;
 
     @GitFiles
-    private Map<String,String> files;
+    private GitRepositoryMap files;
 
 }
 ```
