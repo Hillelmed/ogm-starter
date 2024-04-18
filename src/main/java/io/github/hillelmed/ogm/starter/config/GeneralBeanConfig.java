@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.config;
+package io.github.hillelmed.ogm.starter.config;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.*;
 
 import java.util.*;
 
-import static io.github.hillelmed.ogm.util.OgmAppUtil.*;
+import static io.github.hillelmed.ogm.starter.util.OgmAppUtil.*;
 
 @Configuration
 @EnableConfigurationProperties(OgmProperties.class)

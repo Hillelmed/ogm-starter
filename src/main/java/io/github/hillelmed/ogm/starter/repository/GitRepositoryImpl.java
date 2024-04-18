@@ -1,10 +1,10 @@
-package io.github.hillelmed.ogm.repository;
+package io.github.hillelmed.ogm.starter.repository;
 
 
-import io.github.hillelmed.ogm.annotation.*;
-import io.github.hillelmed.ogm.config.*;
-import io.github.hillelmed.ogm.domain.*;
-import io.github.hillelmed.ogm.service.*;
+import io.github.hillelmed.ogm.starter.annotation.*;
+import io.github.hillelmed.ogm.starter.config.*;
+import io.github.hillelmed.ogm.starter.domain.*;
+import io.github.hillelmed.ogm.starter.service.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.eclipse.jgit.api.*;

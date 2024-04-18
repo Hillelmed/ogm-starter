@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.util;
+package io.github.hillelmed.ogm.starter.util;
 
 import lombok.*;
 

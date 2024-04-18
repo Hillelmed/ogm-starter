@@ -1,6 +1,6 @@
-package io.github.hillelmed.ogm.annotation;
+package io.github.hillelmed.ogm.starter.annotation;
 
-import io.github.hillelmed.ogm.domain.*;
+import io.github.hillelmed.ogm.starter.domain.*;
 
 import java.lang.annotation.*;
 

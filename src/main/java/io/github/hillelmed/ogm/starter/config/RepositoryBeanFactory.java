@@ -1,14 +1,14 @@
-package io.github.hillelmed.ogm.config;
+package io.github.hillelmed.ogm.starter.config;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
 import com.fasterxml.jackson.dataformat.yaml.*;
-import io.github.hillelmed.ogm.annotation.*;
-import io.github.hillelmed.ogm.exception.*;
-import io.github.hillelmed.ogm.invocation.*;
-import io.github.hillelmed.ogm.repository.GitRepository;
-import io.github.hillelmed.ogm.repository.*;
-import io.github.hillelmed.ogm.service.*;
+import io.github.hillelmed.ogm.starter.annotation.*;
+import io.github.hillelmed.ogm.starter.exception.*;
+import io.github.hillelmed.ogm.starter.invocation.*;
+import io.github.hillelmed.ogm.starter.repository.GitRepository;
+import io.github.hillelmed.ogm.starter.repository.*;
+import io.github.hillelmed.ogm.starter.service.*;
 import jakarta.annotation.*;
 import lombok.*;
 import lombok.extern.slf4j.*;

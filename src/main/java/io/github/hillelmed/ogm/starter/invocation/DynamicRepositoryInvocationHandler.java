@@ -1,6 +1,6 @@
-package io.github.hillelmed.ogm.invocation;
+package io.github.hillelmed.ogm.starter.invocation;
 
-import io.github.hillelmed.ogm.repository.*;
+import io.github.hillelmed.ogm.starter.repository.*;
 import lombok.extern.slf4j.*;
 
 import java.lang.reflect.*;

@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.annotation;
+package io.github.hillelmed.ogm.starter.annotation;
 
 import java.lang.annotation.*;
 

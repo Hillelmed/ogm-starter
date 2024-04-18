@@ -1,6 +1,6 @@
-package io.github.hillelmed.ogm.service;
+package io.github.hillelmed.ogm.starter.service;
 
-import io.github.hillelmed.ogm.annotation.*;
+import io.github.hillelmed.ogm.starter.annotation.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 
@@ -15,7 +15,7 @@ public class ReflectionService<T> {
     private final Class<T> clazzType;
 
     public void extractRepositoryAndBranch(T t, AtomicReference<Field> fieldRepoAtomic, AtomicReference<Field> fieldBranchAtomic) {
-        Field repo = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(io.github.hillelmed.ogm.annotation.GitRepository.class)).findFirst().orElse(null);
+        Field repo = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitRepository.class)).findFirst().orElse(null);
         Field branch = Arrays.stream(t.getClass().getDeclaredFields()).filter(field -> field.isAnnotationPresent(GitRevision.class)).findFirst().orElse(null);
         if (repo == null || branch == null) {
             log.error("Repo or Branch are not according right");

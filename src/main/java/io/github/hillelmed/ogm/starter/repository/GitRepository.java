@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.repository;
+package io.github.hillelmed.ogm.starter.repository;
 
 
 public interface GitRepository<T> {

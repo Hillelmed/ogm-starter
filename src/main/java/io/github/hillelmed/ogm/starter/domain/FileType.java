@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.domain;
+package io.github.hillelmed.ogm.starter.domain;
 
 public enum FileType {
 

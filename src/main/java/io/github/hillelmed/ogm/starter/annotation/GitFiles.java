@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.annotation;
+package io.github.hillelmed.ogm.starter.annotation;
 
 import java.lang.annotation.*;
 
@@ -6,5 +6,7 @@ import java.lang.annotation.*;
 @Documented
 @GitModelAnnotation
 @Target(ElementType.FIELD)
-public @interface GitRepository {
+public @interface GitFiles {
+
+    String[] include() default {};
 }

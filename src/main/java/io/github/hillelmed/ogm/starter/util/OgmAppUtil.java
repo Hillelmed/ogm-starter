@@ -1,9 +1,9 @@
-package io.github.hillelmed.ogm.util;
+package io.github.hillelmed.ogm.starter.util;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
 import com.fasterxml.jackson.dataformat.yaml.*;
-import io.github.hillelmed.ogm.domain.*;
+import io.github.hillelmed.ogm.starter.domain.*;
 import lombok.*;
 
 import java.io.*;

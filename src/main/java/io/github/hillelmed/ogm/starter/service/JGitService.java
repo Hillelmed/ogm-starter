@@ -1,12 +1,12 @@
-package io.github.hillelmed.ogm.service;
+package io.github.hillelmed.ogm.starter.service;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
 import com.fasterxml.jackson.dataformat.yaml.*;
-import io.github.hillelmed.ogm.annotation.*;
-import io.github.hillelmed.ogm.config.*;
-import io.github.hillelmed.ogm.domain.*;
-import io.github.hillelmed.ogm.util.*;
+import io.github.hillelmed.ogm.starter.annotation.*;
+import io.github.hillelmed.ogm.starter.config.*;
+import io.github.hillelmed.ogm.starter.domain.*;
+import io.github.hillelmed.ogm.starter.util.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
 import org.eclipse.jgit.api.*;
@@ -24,7 +24,7 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
 
-import static io.github.hillelmed.ogm.util.OgmAppUtil.*;
+import static io.github.hillelmed.ogm.starter.util.OgmAppUtil.*;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.config;
+package io.github.hillelmed.ogm.starter.config;
 
 import lombok.*;
 import org.eclipse.jgit.transport.*;
