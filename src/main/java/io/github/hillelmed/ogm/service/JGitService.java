@@ -194,7 +194,7 @@ public class JGitService {
         Status status = git.status().call();
         Set<String> uncommittedChanges = status.getUncommittedChanges();
         if (uncommittedChanges.isEmpty()) {
-            log.info("No changes detected");
+            log.debug("No changes detected");
             return null;
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -204,7 +204,7 @@ public class JGitService {
         status.getMissing().forEach(s -> stringBuilder.append("File missing: ").append(s).append("\n"));
         status.getModified().forEach(s -> stringBuilder.append("File modified: ").append(s).append("\n"));
         status.getConflicting().forEach(s -> stringBuilder.append("File conflicting: ").append(s).append("\n"));
-        log.info(stringBuilder.toString());
+        log.debug(stringBuilder.toString());
         return stringBuilder.toString();
     }
 }
