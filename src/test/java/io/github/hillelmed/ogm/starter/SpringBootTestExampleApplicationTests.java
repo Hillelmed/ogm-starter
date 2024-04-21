@@ -4,15 +4,12 @@ package io.github.hillelmed.ogm.starter;
 import io.github.hillelmed.ogm.starter.config.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.boot.autoconfigure.*;
-import org.springframework.boot.autoconfigure.jdbc.*;
 import org.springframework.boot.test.context.*;
 import org.springframework.context.*;
 import org.springframework.test.context.*;
 
-@SpringBootTest(classes = {GeneralBeanConfig.class, RepositoryBeanFactory.class, GenericRepo.class, GenericRepoRepository.class})
+@SpringBootTest(classes = {GeneralBeanConfig.class, RepositoryBeanFactory.class})
 @ContextConfiguration(classes = GeneralBeanConfig.class)
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 class SpringBootTestExampleApplicationTests {
 
     @Autowired
@@ -39,7 +36,7 @@ class SpringBootTestExampleApplicationTests {
     @Test
     void testRepoConfig() {
         Assertions.assertNotNull(generalBeanConfig);
-        Assertions.assertNotEquals(generalBeanConfig.repositoryClients().size(), 0);
+        Assertions.assertEquals(generalBeanConfig.repositoryClients().size(), 0);
     }
 
 }

@@ -124,40 +124,31 @@ public class GeneralBeanConfig {
     }
 
     private String getEp() {
-        String ep;
-        if (getEnvOrProp(ENDPOINT_ENV, ENDPOINT_PROP) == null) {
+        String ep = getEnvOrProp(ENDPOINT_ENV, ENDPOINT_PROP);
+        if (ep == null) {
             ep = properties.getUrl();
         } else {
-            ep = getEnvOrProp(ENDPOINT_ENV, ENDPOINT_PROP);
-        }
-        if (ep == null) {
-            ep = DEFAULT_ENDPOINT;
+            return ep;
         }
         return ep;
     }
 
     private String getUser() {
-        String user;
-        if (getEnvOrProp(GIT_USER_ENV, GIT_USER_PROP) == null) {
+        String user = getEnvOrProp(GIT_USER_ENV, GIT_USER_PROP);
+        if (user == null) {
             user = properties.getUsername();
         } else {
-            user = getEnvOrProp(GIT_USER_ENV, GIT_USER_PROP);
-        }
-        if (user == null) {
-            user = GIT_USER;
+            return user;
         }
         return user;
     }
 
     private String getPass() {
-        String pass;
-        if (getEnvOrProp(GIT_PASSWORD_ENV, GIT_PASSWORD_PROP) == null) {
+        String pass = getEnvOrProp(GIT_PASSWORD_ENV, GIT_PASSWORD_PROP);
+        if (pass == null) {
             pass = properties.getPassword();
         } else {
-            pass = getEnvOrProp(GIT_PASSWORD_ENV, GIT_PASSWORD_PROP);
-        }
-        if (pass == null) {
-            pass = GIT_PASSWORD;
+            return pass;
         }
         return pass;
     }

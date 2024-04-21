@@ -12,11 +12,6 @@ import java.util.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OgmAppUtil {
 
-    public static final String DEFAULT_ENDPOINT = "http://127.0.0.1:7990";
-    public static final String GIT_USER = "admin";
-    public static final String GIT_PASSWORD = "admin";
-
-
     public static final String ENDPOINT_PROP = "ogm.endpoint";
     public static final String ENDPOINT_ENV = ENDPOINT_PROP.replace("\\.", "_").toUpperCase();
 
