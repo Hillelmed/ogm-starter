@@ -67,6 +67,7 @@ public class GeneralBeanConfig {
     }
 
     @Bean(name = "yamlMapper")
+    @ConditionalOnMissingBean
     public YAMLMapper yamlMapper() {
         YAMLMapper yamlMapper = new YAMLMapper();
         yamlMapper.enable(SerializationFeature.INDENT_OUTPUT);
