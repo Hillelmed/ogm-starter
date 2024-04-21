@@ -12,7 +12,6 @@ import io.github.hillelmed.ogm.starter.service.*;
 import jakarta.annotation.*;
 import lombok.*;
 import lombok.extern.slf4j.*;
-import org.reflections.*;
 import org.springframework.beans.*;
 import org.springframework.beans.factory.*;
 import org.springframework.beans.factory.annotation.*;
@@ -100,8 +99,11 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
     }
 
     private Set<Class<?>> getGitAnnotationSet() {
-        Reflections reflections = new Reflections("io.github.hillelmed.ogm.annotation");
-        return reflections.getTypesAnnotatedWith(GitModelAnnotation.class);
+        return Set.of(GitFile.class,
+                GitFiles.class,
+                GitModel.class,
+                io.github.hillelmed.ogm.starter.annotation.GitRepository.class,
+                GitRevision.class);
     }
 
 

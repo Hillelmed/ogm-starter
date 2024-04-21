@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.dataformat.xml.*;
 import com.fasterxml.jackson.dataformat.xml.ser.*;
 import com.fasterxml.jackson.dataformat.yaml.*;
+import io.github.hillelmed.ogm.starter.repository.GitRepository;
+import lombok.extern.slf4j.*;
 import org.eclipse.jgit.transport.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.beans.factory.config.*;
@@ -12,8 +14,8 @@ import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.properties.*;
 import org.springframework.context.*;
 import org.springframework.context.annotation.*;
+import org.springframework.core.type.*;
 import org.springframework.core.type.filter.*;
-import org.springframework.stereotype.*;
 
 import java.util.*;
 
@@ -21,6 +23,7 @@ import static io.github.hillelmed.ogm.starter.util.OgmAppUtil.*;
 
 @Configuration
 @EnableConfigurationProperties(OgmProperties.class)
+@Slf4j
 public class GeneralBeanConfig {
 
     private final OgmProperties properties;
@@ -36,7 +39,14 @@ public class GeneralBeanConfig {
                 return super.isCandidateComponent(beanDefinition) || beanDefinition.getMetadata().isAbstract();
             }
         };
-        provider.addIncludeFilter(new AnnotationTypeFilter(Repository.class, true, true));
+        provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
+            @Override
+            protected boolean match(ClassMetadata metadata) {
+                if (metadata.getInterfaceNames().length == 0) {
+                    return false;
+                } else return metadata.getInterfaceNames()[0].equals(GitRepository.class.getCanonicalName());
+            }
+        });
     }
 
     @Bean(name = "jsonMapper")
@@ -77,17 +87,22 @@ public class GeneralBeanConfig {
 
     @Bean(name = "listOfRepositoriesClass")
     public List<String> repositoryClients() {
-        final Set<BeanDefinition> classes = provider.findCandidateComponents(getBasePackagePath());
-        List<String> names = new ArrayList<>();
-        for (BeanDefinition bean : classes) {
-            try {
-                Class.forName(bean.getBeanClassName());
-                names.add(bean.getBeanClassName());
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
+        try {
+            final Set<BeanDefinition> classes = provider.findCandidateComponents(getBasePackagePath());
+            List<String> names = new ArrayList<>();
+            for (BeanDefinition bean : classes) {
+                try {
+                    Class.forName(bean.getBeanClassName());
+                    names.add(bean.getBeanClassName());
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
             }
+            return names;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return Collections.emptyList();
         }
-        return names;
     }
 
     private String getBasePackagePath() {

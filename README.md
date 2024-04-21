@@ -19,8 +19,8 @@ Add to your dependencies: (Maven example: Latest release)
 </dependency>
 ```
 
-The starter will scan your base package from `@SpringBootApplication` annotation And search interface that have
-annotations `@Repository` And also extend to `GitRepository<T>` Interface with `@GitModel` `<T> generic type`
+The starter will scan your base package from `@SpringBootApplication` annotation And search interface that
+extend to `GitRepository<T>` Interface with `@GitModel` `<T> generic type`
 Example of `GitModel` class that class will be the `<T>`:
 
 ```
@@ -43,7 +43,6 @@ public class GitPomFile {
 Example of GitRepository class:
 
 ```
-@Repository
 public interface MyRepoForSpesificFile extends GitRepository<GitPomFile> {
 }
 ```
@@ -117,7 +116,6 @@ Missing
 ## Components
 
 - Spring Starter
-- Reflections
 - Lombok \- used to create immutable value types both
 - Proxy bean
 - Jgit (eclipse)

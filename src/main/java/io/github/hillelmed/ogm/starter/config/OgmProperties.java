@@ -8,8 +8,8 @@ import org.springframework.boot.context.properties.*;
 @EnableConfigurationProperties
 public class OgmProperties {
 
-    private String url;
-    private String username;
-    private String password;
+    private String url = "https://api.github.com";
+    private String username = "admin";
+    private String password = "admin";
 
 }
