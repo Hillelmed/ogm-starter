@@ -38,8 +38,8 @@ public class OgmAppUtil {
                                        ObjectMapper jsonMapper,
                                        YAMLMapper yamlMapper,
                                        FileType fileType, Object content, String path) throws IOException {
-        FileWriter fileWriter = new FileWriter(path);
-        PrintWriter printWriter = new PrintWriter(fileWriter);
+        // Create the necessary folder structure
+        PrintWriter printWriter = getPrintWriter(path);
         switch (fileType) {
             case TEXT_PLAIN -> printWriter.print(content);
             case XML -> {
@@ -66,6 +66,19 @@ public class OgmAppUtil {
             default -> throw new RuntimeException("Unsupported file type: " + fileType);
         }
         printWriter.close();
+    }
+
+    private static PrintWriter getPrintWriter(String path) throws IOException {
+        File file = new File(path);
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists()) {
+            boolean mkdirResult = parentDir.mkdirs(); // Create parent directories if they don't exist
+            if (!mkdirResult) {
+                throw new IOException("Unable to create directory " + parentDir);
+            }
+        }
+        FileWriter fileWriter = new FileWriter(path);
+        return new PrintWriter(fileWriter);
     }
 
     public static Object readByType(XmlMapper xmlMapper,

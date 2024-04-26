@@ -118,8 +118,8 @@ Missing
 - Spring Starter
 - Lombok \- used to create immutable value types both
 - Proxy bean
-- Jgit (eclipse)
-- Jackson-databind (JSON,YAML,XML)
+- JGit (eclipse)
+- Jackson-databind (JSON, YAML, XML)
 
 ## Testing
 

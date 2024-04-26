@@ -68,7 +68,9 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
                         new ReflectionService(clazzTypeTGeneric));
 
                 String beanName = clazzToRegistry.getName();
-                Object proxyInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]), new DynamicRepositoryInvocationHandler(gitRepository));
+                Object proxyInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                        List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]),
+                        new DynamicRepositoryInvocationHandler(gitRepository));
                 configurableBeanFactory.registerSingleton(beanName, proxyInstance);
             });
         } catch (Exception e) {
