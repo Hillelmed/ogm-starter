@@ -136,7 +136,7 @@ public class JGitService {
             String filePath = git.getRepository().getDirectory()
                     .getAbsolutePath().replace(".git", "") + gitFileAnnotation.path();
             if (isUpdateExistFile && !new File(filePath).exists()) {
-                throw new UnsupportedEncodingException("File does not exist use create for create the file");
+                throw new UnsupportedEncodingException("File does not exist use create method for create this file");
             }
             OgmAppUtil.writeFileByType(xmlMapper, jsonMapper, yamlMapper, gitFileAnnotation.type(), content, filePath);
             commitMessageAndPush(git, ogmConfig);
@@ -163,7 +163,7 @@ public class JGitService {
                         .getAbsolutePath().replace(".git", "") + path;
                 if (isUpdateExistFile && !new File(filePath).exists()) {
                     try {
-                        throw new UnsupportedEncodingException("File does not exist use create for create the file");
+                        throw new UnsupportedEncodingException("File does not exist use create method for create this file");
                     } catch (UnsupportedEncodingException e) {
                         throw new OgmRuntimeException(e);
                     }

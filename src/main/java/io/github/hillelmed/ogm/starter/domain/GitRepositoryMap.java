@@ -93,7 +93,7 @@ public class GitRepositoryMap extends HashMap<String, String> {
     @Override
     public String put(String key, String value) {
         String valueTmp = super.put(key, value);
-        if (valueTmp == null || valueTmp.equals(value)) {
+        if (valueTmp == null || !valueTmp.equals(value)) {
             keyPathAddedOrChange.add(key);
             return valueTmp;
         }
@@ -103,7 +103,7 @@ public class GitRepositoryMap extends HashMap<String, String> {
     @Override
     public String putIfAbsent(String key, String value) {
         String valueTmp = super.putIfAbsent(key, value);
-        if (valueTmp == null || valueTmp.equals(value)) {
+        if (valueTmp == null || !valueTmp.equals(value)) {
             keyPathAddedOrChange.add(key);
             return valueTmp;
         }
