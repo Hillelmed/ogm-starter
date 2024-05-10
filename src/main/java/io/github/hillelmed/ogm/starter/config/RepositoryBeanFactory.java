@@ -1,25 +1,34 @@
 package io.github.hillelmed.ogm.starter.config;
 
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.dataformat.xml.*;
-import com.fasterxml.jackson.dataformat.yaml.*;
-import io.github.hillelmed.ogm.starter.annotation.*;
-import io.github.hillelmed.ogm.starter.exception.*;
-import io.github.hillelmed.ogm.starter.invocation.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import io.github.hillelmed.ogm.starter.annotation.GitFile;
+import io.github.hillelmed.ogm.starter.annotation.GitFiles;
+import io.github.hillelmed.ogm.starter.annotation.GitModel;
+import io.github.hillelmed.ogm.starter.annotation.GitRevision;
+import io.github.hillelmed.ogm.starter.exception.MissingAnnotationException;
+import io.github.hillelmed.ogm.starter.exception.OgmRuntimeException;
+import io.github.hillelmed.ogm.starter.invocation.DynamicRepositoryInvocationHandler;
 import io.github.hillelmed.ogm.starter.repository.GitRepository;
-import io.github.hillelmed.ogm.starter.repository.*;
-import io.github.hillelmed.ogm.starter.service.*;
-import jakarta.annotation.*;
-import lombok.*;
-import lombok.extern.slf4j.*;
-import org.springframework.beans.*;
-import org.springframework.beans.factory.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.beans.factory.config.*;
+import io.github.hillelmed.ogm.starter.repository.GitRepositoryImpl;
+import io.github.hillelmed.ogm.starter.service.JGitService;
+import io.github.hillelmed.ogm.starter.service.ReflectionService;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Configuration;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 @Configuration
 @RequiredArgsConstructor
@@ -53,14 +62,14 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
                     clazzTypeTGeneric = Class.forName(((ParameterizedType) Class.forName(name).getAnnotatedInterfaces()[0].getType()).getActualTypeArguments()[0].getTypeName());
                     clazzToRegistry = Class.forName(name);
                 } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
                 try {
                     validateGitRepository(clazzToRegistry);
                     validateGitModel(clazzTypeTGeneric);
                 } catch (MissingAnnotationException | UnsupportedOperationException e) {
                     log.error(e.getMessage());
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
 
                 GitRepositoryImpl gitRepository = new GitRepositoryImpl(ogmConfig,

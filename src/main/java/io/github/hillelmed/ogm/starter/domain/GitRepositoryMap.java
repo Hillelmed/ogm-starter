@@ -1,9 +1,14 @@
 package io.github.hillelmed.ogm.starter.domain;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)

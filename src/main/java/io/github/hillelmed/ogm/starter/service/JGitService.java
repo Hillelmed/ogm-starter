@@ -1,30 +1,48 @@
 package io.github.hillelmed.ogm.starter.service;
 
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.dataformat.xml.*;
-import com.fasterxml.jackson.dataformat.yaml.*;
-import io.github.hillelmed.ogm.starter.annotation.*;
-import io.github.hillelmed.ogm.starter.config.*;
-import io.github.hillelmed.ogm.starter.domain.*;
-import io.github.hillelmed.ogm.starter.util.*;
-import lombok.*;
-import lombok.extern.slf4j.*;
-import org.eclipse.jgit.api.*;
-import org.eclipse.jgit.api.errors.*;
-import org.eclipse.jgit.internal.storage.dfs.*;
-import org.eclipse.jgit.lib.*;
-import org.eclipse.jgit.revwalk.*;
-import org.eclipse.jgit.transport.*;
-import org.eclipse.jgit.treewalk.*;
-import org.eclipse.jgit.treewalk.filter.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import io.github.hillelmed.ogm.starter.annotation.GitFile;
+import io.github.hillelmed.ogm.starter.config.OgmConfig;
+import io.github.hillelmed.ogm.starter.domain.FileType;
+import io.github.hillelmed.ogm.starter.domain.GitRepositoryMap;
+import io.github.hillelmed.ogm.starter.exception.OgmRuntimeException;
+import io.github.hillelmed.ogm.starter.util.FolderFileUtil;
+import io.github.hillelmed.ogm.starter.util.GitConst;
+import io.github.hillelmed.ogm.starter.util.OgmAppUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PushCommand;
+import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.internal.storage.dfs.DfsRepositoryDescription;
+import org.eclipse.jgit.internal.storage.dfs.InMemoryRepository;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
+import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
 
-import java.io.*;
-import java.nio.charset.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import static io.github.hillelmed.ogm.starter.util.OgmAppUtil.*;
+import static io.github.hillelmed.ogm.starter.util.OgmAppUtil.readByType;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -123,7 +141,7 @@ public class JGitService {
             OgmAppUtil.writeFileByType(xmlMapper, jsonMapper, yamlMapper, gitFileAnnotation.type(), content, filePath);
             commitMessageAndPush(git, ogmConfig);
         } catch (GitAPIException e) {
-            throw new RuntimeException(e);
+            throw new OgmRuntimeException(e);
         }
 
     }
@@ -147,13 +165,13 @@ public class JGitService {
                     try {
                         throw new UnsupportedEncodingException("File does not exist use create for create the file");
                     } catch (UnsupportedEncodingException e) {
-                        throw new RuntimeException(e);
+                        throw new OgmRuntimeException(e);
                     }
                 }
                 try {
                     OgmAppUtil.findTypeAndWriteFile(xmlMapper, jsonMapper, yamlMapper, contentFiles.get(path), filePath);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
             });
             AtomicBoolean deletedFiles = new AtomicBoolean(false);
@@ -164,12 +182,12 @@ public class JGitService {
                     Files.delete(Path.of(filePath));
                     deletedFiles.compareAndSet(false, true);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
             });
             commitMessageAndPush(git, ogmConfig);
         } catch (GitAPIException e) {
-            throw new RuntimeException(e);
+            throw new OgmRuntimeException(e);
         }
 
     }

@@ -1,21 +1,27 @@
 package io.github.hillelmed.ogm.starter.config;
 
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.dataformat.xml.*;
-import com.fasterxml.jackson.dataformat.xml.ser.*;
-import com.fasterxml.jackson.dataformat.yaml.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import io.github.hillelmed.ogm.starter.exception.OgmRuntimeException;
 import io.github.hillelmed.ogm.starter.repository.GitRepository;
-import lombok.extern.slf4j.*;
-import org.eclipse.jgit.transport.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.beans.factory.config.*;
-import org.springframework.boot.autoconfigure.*;
-import org.springframework.boot.autoconfigure.condition.*;
-import org.springframework.boot.context.properties.*;
-import org.springframework.context.*;
-import org.springframework.context.annotation.*;
-import org.springframework.core.type.*;
-import org.springframework.core.type.filter.*;
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.type.ClassMetadata;
+import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 
 import java.util.*;
 
@@ -96,7 +102,7 @@ public class GeneralBeanConfig {
                     Class.forName(bean.getBeanClassName());
                     names.add(bean.getBeanClassName());
                 } catch (ClassNotFoundException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
             }
             return names;

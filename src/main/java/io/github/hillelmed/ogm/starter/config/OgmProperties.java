@@ -1,7 +1,8 @@
 package io.github.hillelmed.ogm.starter.config;
 
-import lombok.*;
-import org.springframework.boot.context.properties.*;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @Data
 @ConfigurationProperties(prefix = "ogm.data.git")

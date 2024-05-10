@@ -1,7 +1,7 @@
 package io.github.hillelmed.ogm.starter.config;
 
-import lombok.*;
-import org.eclipse.jgit.transport.*;
+import lombok.Data;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 @Data
 public class OgmConfig {

@@ -1,19 +1,26 @@
 package io.github.hillelmed.ogm.starter.repository;
 
 
-import io.github.hillelmed.ogm.starter.annotation.*;
-import io.github.hillelmed.ogm.starter.config.*;
-import io.github.hillelmed.ogm.starter.domain.*;
-import io.github.hillelmed.ogm.starter.service.*;
-import lombok.*;
-import lombok.extern.slf4j.*;
-import org.eclipse.jgit.api.*;
-import org.eclipse.jgit.api.errors.*;
+import io.github.hillelmed.ogm.starter.annotation.GitFile;
+import io.github.hillelmed.ogm.starter.annotation.GitFiles;
+import io.github.hillelmed.ogm.starter.config.OgmConfig;
+import io.github.hillelmed.ogm.starter.domain.FileType;
+import io.github.hillelmed.ogm.starter.domain.GitRepositoryMap;
+import io.github.hillelmed.ogm.starter.exception.OgmRuntimeException;
+import io.github.hillelmed.ogm.starter.service.JGitService;
+import io.github.hillelmed.ogm.starter.service.ReflectionService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.UnknownFormatFlagsException;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +36,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
             return createFileOrFilesAndSyncDeleteFilesAndPush(t);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new OgmRuntimeException(e);
         }
     }
 
@@ -40,7 +47,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
             return createFileOrFilesUpdateAndPush(t, true);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new OgmRuntimeException(e);
         }
 
     }
@@ -51,7 +58,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
             return getFileOrMapOfFiles(t);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new OgmRuntimeException(e);
         }
 
     }
@@ -63,7 +70,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new OgmRuntimeException(e);
         }
     }
 
@@ -73,7 +80,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
             getFileOrMapOfFiles(t);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new RuntimeException(e);
+            throw new OgmRuntimeException(e);
         }
     }
 
@@ -114,7 +121,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new OgmRuntimeException(e);
         }
         return t;
 
@@ -143,7 +150,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new OgmRuntimeException(e);
         }
         return t;
     }

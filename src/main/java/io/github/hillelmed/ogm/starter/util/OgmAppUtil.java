@@ -1,13 +1,20 @@
 package io.github.hillelmed.ogm.starter.util;
 
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.dataformat.xml.*;
-import com.fasterxml.jackson.dataformat.yaml.*;
-import io.github.hillelmed.ogm.starter.domain.*;
-import lombok.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import io.github.hillelmed.ogm.starter.domain.FileType;
+import io.github.hillelmed.ogm.starter.exception.OgmRuntimeException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OgmAppUtil {
@@ -46,21 +53,21 @@ public class OgmAppUtil {
                 try {
                     printWriter.print(xmlMapper.writeValueAsString(content));
                 } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
             }
             case JSON -> {
                 try {
                     printWriter.print(jsonMapper.writeValueAsString(content));
                 } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
             }
             case YAML -> {
                 try {
                     printWriter.print(yamlMapper.writeValueAsString(content));
                 } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
             }
             default -> throw new RuntimeException("Unsupported file type: " + fileType);
@@ -93,21 +100,21 @@ public class OgmAppUtil {
                 try {
                     return xmlMapper.readValue(string, JsonNode.class);
                 } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
             }
             case JSON -> {
                 try {
                     return jsonMapper.readValue(string, JsonNode.class);
                 } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
             }
             case YAML -> {
                 try {
                     return yamlMapper.readValue(string, JsonNode.class);
                 } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-                    throw new RuntimeException(e);
+                    throw new OgmRuntimeException(e);
                 }
             }
             default -> {

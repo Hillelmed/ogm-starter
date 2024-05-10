@@ -1,6 +1,7 @@
 package io.github.hillelmed.ogm.starter.util;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GitConst {

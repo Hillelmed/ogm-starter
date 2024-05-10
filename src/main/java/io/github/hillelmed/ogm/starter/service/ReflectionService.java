@@ -1,12 +1,14 @@
 package io.github.hillelmed.ogm.starter.service;
 
-import io.github.hillelmed.ogm.starter.annotation.*;
-import lombok.*;
-import lombok.extern.slf4j.*;
+import io.github.hillelmed.ogm.starter.annotation.GitRepository;
+import io.github.hillelmed.ogm.starter.annotation.GitRevision;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @RequiredArgsConstructor
