@@ -1,0 +1,6 @@
+ogm:
+  data:
+    git:
+      username: ${OGM_USER}
+      password: ${OGM_PASSWORD}
+      url: https://github.com/Hillelmed
