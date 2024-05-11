@@ -2,6 +2,7 @@ package io.github.hillelmed.ogm.starter.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -15,6 +16,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Slf4j
 public class FolderFileUtil {
 
     public static void setWritable(Path rootDir) {
@@ -32,7 +34,7 @@ public class FolderFileUtil {
                 }
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
