@@ -1,0 +1,15 @@
+package io.github.hillelmed.ogm.starter.annotation;
+
+import io.github.hillelmed.ogm.starter.domain.FileType;
+
+import java.lang.annotation.*;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target(ElementType.FIELD)
+public @interface GitFile {
+
+    String path() default "";
+
+    FileType type() default FileType.TEXT_PLAIN;
+}
