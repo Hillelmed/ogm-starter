@@ -36,7 +36,7 @@ class SpringBootTestExampleApplicationTests {
     @Test
     void testRepoConfig() {
         Assertions.assertNotNull(generalBeanConfig);
-        Assertions.assertEquals(generalBeanConfig.repositoryClients().size(), 0);
+        Assertions.assertEquals(generalBeanConfig.listOfRepositoriesClass().size(), 0);
     }
 
 }

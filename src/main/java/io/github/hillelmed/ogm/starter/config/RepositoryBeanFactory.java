@@ -32,8 +32,9 @@ import java.util.Set;
 @Slf4j
 public class RepositoryBeanFactory implements BeanFactoryAware {
 
-    private final List<String> listOfRepositoriesClass;
     private final OgmConfig ogmConfig;
+    @Qualifier("listOfRepositoriesClass")
+    private final List<String> listOfRepositoriesClass;
     @Qualifier("jsonMapper")
     private final ObjectMapper jsonMapper;
     @Qualifier("yamlMapper")
@@ -49,40 +50,40 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
 
     @PostConstruct
     public void onPostConstruct() {
-        ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
-
         try {
-            listOfRepositoriesClass.forEach(name -> {
-                Class<?> clazzTypeTGeneric;
-                Class<?> clazzToRegistry;
-                try {
-                    clazzTypeTGeneric = Class.forName(((ParameterizedType) Class.forName(name).getAnnotatedInterfaces()[0].getType()).getActualTypeArguments()[0].getTypeName());
-                    clazzToRegistry = Class.forName(name);
-                } catch (ClassNotFoundException e) {
-                    throw new OgmRuntimeException(e);
-                }
-                try {
-                    validateGitRepository(clazzToRegistry);
-                    validateGitModel(clazzTypeTGeneric);
-                } catch (MissingAnnotationThrowable | UnsupportedOperationException e) {
-                    log.error(e.getMessage());
-                    throw new OgmRuntimeException(e);
-                }
-
-                GitCrudRepositoryImpl gitRepository = new GitCrudRepositoryImpl(ogmConfig,
-                        new JGitService(jsonMapper, xmlMapper, yamlMapper),
-                        new ReflectionService(clazzTypeTGeneric));
-
-                String beanName = clazzToRegistry.getName();
-                Object proxyInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]),
-                        new DynamicRepositoryInvocationHandler(gitRepository));
-                configurableBeanFactory.registerSingleton(beanName, proxyInstance);
-            });
+            listOfRepositoriesClass.forEach(this::loadClassProxyToBean);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
 
+    public void loadClassProxyToBean(String clazzName) {
+        ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
+        Class<?> clazzTypeTGeneric;
+        Class<?> clazzToRegistry;
+        try {
+            clazzTypeTGeneric = Class.forName(((ParameterizedType) Class.forName(clazzName).getAnnotatedInterfaces()[0].getType()).getActualTypeArguments()[0].getTypeName());
+            clazzToRegistry = Class.forName(clazzName);
+        } catch (ClassNotFoundException e) {
+            throw new OgmRuntimeException(e);
+        }
+        try {
+            validateGitRepository(clazzToRegistry);
+            validateGitModel(clazzTypeTGeneric);
+        } catch (MissingAnnotationThrowable | UnsupportedOperationException e) {
+            log.error(e.getMessage());
+            throw new OgmRuntimeException(e);
+        }
+
+        GitCrudRepositoryImpl gitRepository = new GitCrudRepositoryImpl(ogmConfig,
+                new JGitService(jsonMapper, xmlMapper, yamlMapper),
+                new ReflectionService(clazzTypeTGeneric));
+
+        String beanName = clazzToRegistry.getName();
+        Object proxyInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+                List.of(clazzToRegistry.getNestHost()).toArray(new Class[0]),
+                new DynamicRepositoryInvocationHandler(gitRepository));
+        configurableBeanFactory.registerSingleton(beanName, proxyInstance);
     }
 
     private void validateGitRepository(Class<?> clazzToRegistry) {

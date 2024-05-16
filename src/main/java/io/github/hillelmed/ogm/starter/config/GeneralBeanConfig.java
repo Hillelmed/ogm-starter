@@ -92,7 +92,7 @@ public class GeneralBeanConfig {
 
 
     @Bean(name = "listOfRepositoriesClass")
-    public List<String> repositoryClients() {
+    public List<String> listOfRepositoriesClass() {
         try {
             final Set<BeanDefinition> classes = provider.findCandidateComponents(getBasePackagePath());
             List<String> names = new ArrayList<>();
