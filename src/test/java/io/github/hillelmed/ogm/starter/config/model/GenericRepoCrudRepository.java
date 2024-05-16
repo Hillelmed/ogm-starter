@@ -1,4 +1,4 @@
-package io.github.hillelmed.ogm.starter.model;
+package io.github.hillelmed.ogm.starter.config.model;
 
 
 import io.github.hillelmed.ogm.starter.repository.GitCrudRepository;
