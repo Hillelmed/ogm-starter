@@ -34,4 +34,4 @@ jobs:
       with:
         generate-branches-badge: true
     - name: IntegrationTest with Maven
-      run: mvn -f integration-test/pom.xml -B clean test -DOGM_USER=${{ secrets.USER_GIT_INTEGRATION_TESTING }} -DOGM_PASSWORD=${{ secrets.TOKEN_GIT_INTEGRATION_TESTING }}
+      run: mvn -f integration-test/pom.xml -B clean test -Dogm.user=${{ secrets.USER_GIT_INTEGRATION_TESTING }} -Dogm_password=${{ secrets.TOKEN_GIT_INTEGRATION_TESTING }}

@@ -13,12 +13,12 @@ import lombok.Data;
 public class RepoApplicationFile {
 
     @GitRepository
-    String repo;
+    private String repo;
 
     @GitRevision
-    String branch;
+    private String branch;
 
     @GitFile(path = "not-exist-file/application.yml", type = FileType.YAML)
-    JsonNode applicationYaml;
+    private JsonNode applicationYaml;
 
 }
