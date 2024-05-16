@@ -28,7 +28,7 @@ public class GitRepositoryMap extends HashMap<String, String> {
     public GitRepositoryMap() {
     }
 
-    public GitRepositoryMap(Map<? extends String, ? extends String> m) {
+    public GitRepositoryMap(Map<String,String> m) {
         super(m);
         keyPathAddedOrChange.addAll(m.keySet());
     }

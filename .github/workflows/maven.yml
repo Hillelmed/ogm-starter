@@ -33,3 +33,5 @@ jobs:
       uses: cicirello/jacoco-badge-generator@v2
       with:
         generate-branches-badge: true
+    - name: IntegrationTest with Maven
+      run: mvn -f integration-test/pom.xml -B clean test -DOGM_USER=${{ secrets.USER_GIT_INTEGRATION_TESTING }} -DOGM_PASSWORD=${{ secrets.TOKEN_GIT_INTEGRATION_TESTING }}

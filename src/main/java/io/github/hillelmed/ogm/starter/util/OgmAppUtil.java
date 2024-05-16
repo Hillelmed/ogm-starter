@@ -20,13 +20,13 @@ import java.util.Optional;
 public class OgmAppUtil {
 
     public static final String ENDPOINT_PROP = "ogm.endpoint";
-    public static final String ENDPOINT_ENV = ENDPOINT_PROP.replace("\\.", "_").toUpperCase();
+    public static final String ENDPOINT_ENV = ENDPOINT_PROP.replace('.', '_').toUpperCase();
 
     public static final String GIT_USER_PROP = "ogm.user";
-    public static final String GIT_USER_ENV = GIT_USER_PROP.replace("\\.", "_").toUpperCase();
+    public static final String GIT_USER_ENV = GIT_USER_PROP.replace('.', '_').toUpperCase();
 
     public static final String GIT_PASSWORD_PROP = "ogm.password";
-    public static final String GIT_PASSWORD_ENV = GIT_PASSWORD_PROP.replace("\\.", "_").toUpperCase();
+    public static final String GIT_PASSWORD_ENV = GIT_PASSWORD_PROP.replace('.', '_').toUpperCase();
 
     public static void findTypeAndWriteFile(XmlMapper xmlMapper,
                                             ObjectMapper jsonMapper,
@@ -70,7 +70,7 @@ public class OgmAppUtil {
                     throw new OgmRuntimeException(e);
                 }
             }
-            default -> throw new RuntimeException("Unsupported file type: " + fileType);
+            default -> throw new OgmRuntimeException("Unsupported file type: " + fileType);
         }
         printWriter.close();
     }

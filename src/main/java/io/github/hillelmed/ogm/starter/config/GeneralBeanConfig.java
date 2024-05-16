@@ -7,8 +7,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import io.github.hillelmed.ogm.starter.exception.OgmRuntimeException;
-import io.github.hillelmed.ogm.starter.repository.GitRepository;
+import io.github.hillelmed.ogm.starter.repository.GitCrudRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
@@ -50,7 +49,7 @@ public class GeneralBeanConfig {
             protected boolean match(ClassMetadata metadata) {
                 if (metadata.getInterfaceNames().length == 0) {
                     return false;
-                } else return metadata.getInterfaceNames()[0].equals(GitRepository.class.getCanonicalName());
+                } else return metadata.getInterfaceNames()[0].equals(GitCrudRepository.class.getCanonicalName());
             }
         });
     }
@@ -98,12 +97,8 @@ public class GeneralBeanConfig {
             final Set<BeanDefinition> classes = provider.findCandidateComponents(getBasePackagePath());
             List<String> names = new ArrayList<>();
             for (BeanDefinition bean : classes) {
-                try {
-                    Class.forName(bean.getBeanClassName());
-                    names.add(bean.getBeanClassName());
-                } catch (ClassNotFoundException e) {
-                    throw new OgmRuntimeException(e);
-                }
+                Class.forName(bean.getBeanClassName());
+                names.add(bean.getBeanClassName());
             }
             return names;
         } catch (Exception e) {

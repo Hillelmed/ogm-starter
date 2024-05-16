@@ -3,15 +3,12 @@ package io.github.hillelmed.ogm.starter.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import io.github.hillelmed.ogm.starter.annotation.GitFile;
-import io.github.hillelmed.ogm.starter.annotation.GitFiles;
-import io.github.hillelmed.ogm.starter.annotation.GitModel;
-import io.github.hillelmed.ogm.starter.annotation.GitRevision;
-import io.github.hillelmed.ogm.starter.exception.MissingAnnotationException;
+import io.github.hillelmed.ogm.starter.annotation.*;
+import io.github.hillelmed.ogm.starter.exception.MissingAnnotationThrowable;
 import io.github.hillelmed.ogm.starter.exception.OgmRuntimeException;
 import io.github.hillelmed.ogm.starter.invocation.DynamicRepositoryInvocationHandler;
-import io.github.hillelmed.ogm.starter.repository.GitRepository;
-import io.github.hillelmed.ogm.starter.repository.GitRepositoryImpl;
+import io.github.hillelmed.ogm.starter.repository.GitCrudRepository;
+import io.github.hillelmed.ogm.starter.repository.GitCrudRepositoryImpl;
 import io.github.hillelmed.ogm.starter.service.JGitService;
 import io.github.hillelmed.ogm.starter.service.ReflectionService;
 import jakarta.annotation.PostConstruct;
@@ -67,12 +64,12 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
                 try {
                     validateGitRepository(clazzToRegistry);
                     validateGitModel(clazzTypeTGeneric);
-                } catch (MissingAnnotationException | UnsupportedOperationException e) {
+                } catch (MissingAnnotationThrowable | UnsupportedOperationException e) {
                     log.error(e.getMessage());
                     throw new OgmRuntimeException(e);
                 }
 
-                GitRepositoryImpl gitRepository = new GitRepositoryImpl(ogmConfig,
+                GitCrudRepositoryImpl gitRepository = new GitCrudRepositoryImpl(ogmConfig,
                         new JGitService(jsonMapper, xmlMapper, yamlMapper),
                         new ReflectionService(clazzTypeTGeneric));
 
@@ -89,14 +86,14 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
     }
 
     private void validateGitRepository(Class<?> clazzToRegistry) {
-        if (clazzToRegistry.getMethods().length > GitRepository.class.getMethods().length) {
+        if (clazzToRegistry.getMethods().length > GitCrudRepository.class.getMethods().length) {
             throw new UnsupportedOperationException("Method are not allowed in repository interface Not supported yet.");
         }
     }
 
-    private void validateGitModel(Class<?> t) throws MissingAnnotationException {
+    private void validateGitModel(Class<?> t) throws MissingAnnotationThrowable {
         if (!validateModel(t)) {
-            throw new MissingAnnotationException("Some annotation missing in git model");
+            throw new MissingAnnotationThrowable("Some annotation missing in git model");
         }
     }
 
@@ -113,7 +110,7 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
         return Set.of(GitFile.class,
                 GitFiles.class,
                 GitModel.class,
-                io.github.hillelmed.ogm.starter.annotation.GitRepository.class,
+                GitRepository.class,
                 GitRevision.class);
     }
 
