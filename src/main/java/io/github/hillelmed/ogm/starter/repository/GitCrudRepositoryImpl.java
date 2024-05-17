@@ -24,16 +24,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 @RequiredArgsConstructor
-public class GitRepositoryImpl<T> implements GitRepository<T> {
+public class GitCrudRepositoryImpl<T> implements GitCrudRepository<T> {
 
     private final OgmConfig ogmConfig;
     private final JGitService jGitService;
     private final ReflectionService<T> reflectionService;
 
     @Override
-    public T sync(T t) {
+    public void sync(T t) {
         try {
-            return createFileOrFilesAndSyncDeleteFilesAndPush(t);
+            createFileOrFilesAndSyncDeleteFilesAndPush(t);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new OgmRuntimeException(e);
@@ -42,9 +42,9 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
 
 
     @Override
-    public T update(T t) {
+    public void update(T t) {
         try {
-            return createFileOrFilesUpdateAndPush(t, true);
+            createFileOrFilesUpdateAndPush(t, true);
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new OgmRuntimeException(e);
@@ -84,11 +84,11 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
         }
     }
 
-    private T createFileOrFilesAndSyncDeleteFilesAndPush(T t) {
-        return createFileOrFilesUpdateAndPush(t, false);
+    private void createFileOrFilesAndSyncDeleteFilesAndPush(T t) {
+        createFileOrFilesUpdateAndPush(t, false);
     }
 
-    private T createFileOrFilesUpdateAndPush(T t, boolean isUpdateExistFile) {
+    private void createFileOrFilesUpdateAndPush(T t, boolean isUpdateExistFile) {
         AtomicReference<Field> repo = new AtomicReference<>();
         AtomicReference<Field> branch = new AtomicReference<>();
         reflectionService.extractRepositoryAndBranch(t, repo, branch);
@@ -123,7 +123,6 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
         } catch (Exception e) {
             throw new OgmRuntimeException(e);
         }
-        return t;
 
     }
 
@@ -178,6 +177,7 @@ public class GitRepositoryImpl<T> implements GitRepository<T> {
             Field f = fieldOptional.get();
             f.setAccessible(true);
             f.set(t, res);
+
         }
         return t;
     }

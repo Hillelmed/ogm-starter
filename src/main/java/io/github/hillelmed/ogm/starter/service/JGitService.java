@@ -158,7 +158,7 @@ public class JGitService {
                 .setURI(ogmConfig.getUrl() + "/" + repositoryFieldValue)
                 .setDirectory(tmpdir)
                 .call()) {
-            contentFiles.getKeyPathAddedOrChange().forEach((path) -> {
+            contentFiles.getKeyPathAddedOrChange().forEach((String path) -> {
                 String filePath = git.getRepository().getDirectory()
                         .getAbsolutePath().replace(".git", "") + path;
                 if (isUpdateExistFile && !new File(filePath).exists()) {

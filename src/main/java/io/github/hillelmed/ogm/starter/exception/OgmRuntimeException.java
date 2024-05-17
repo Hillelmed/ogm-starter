@@ -5,4 +5,8 @@ public class OgmRuntimeException extends RuntimeException {
     public OgmRuntimeException(Throwable cause) {
         super(cause);
     }
+
+    public OgmRuntimeException(String message) {
+        super(message);
+    }
 }

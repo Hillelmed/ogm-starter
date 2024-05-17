@@ -1,8 +1,6 @@
-package io.gituhb.hillelmed.ogm.starter.integrationtesting.repo;
-
+package io.github.hillelmed.ogm.starter.config.model;
 
 import io.github.hillelmed.ogm.starter.repository.GitCrudRepository;
-import io.gituhb.hillelmed.ogm.starter.integrationtesting.model.RepoApplicationFile;
 
 public interface MyRepoAppForSpesificFile extends GitCrudRepository<RepoApplicationFile> {
 }

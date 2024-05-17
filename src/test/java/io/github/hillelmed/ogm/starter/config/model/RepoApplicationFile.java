@@ -1,4 +1,4 @@
-package io.gituhb.hillelmed.ogm.starter.integrationtesting.model;
+package io.github.hillelmed.ogm.starter.config.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.hillelmed.ogm.starter.annotation.GitFile;
@@ -15,7 +15,6 @@ public class RepoApplicationFile {
     @GitRepository
     private String repo;
 
-    @GitRevision
     private String branch;
 
     @GitFile(path = "not-exist-file/application.yml", type = FileType.YAML)

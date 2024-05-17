@@ -20,7 +20,7 @@ Add to your dependencies: (Maven example: Latest release)
 ```
 
 The starter will scan your base package from `@SpringBootApplication` annotation And search interface that
-extend to `GitRepository<T>` Interface with `@GitModel` `<T> generic type`
+extend to `GitCrudRepository<T>` Interface with `@GitModel` `<T> generic type`
 Example of `GitModel` class that class will be the `<T>`:
 
 ```
@@ -43,7 +43,7 @@ public class GitPomFile {
 Example of GitRepository class:
 
 ```
-public interface MyRepoForSpesificFile extends GitRepository<GitPomFile> {
+public interface MyRepoForSpesificFile extends GitCrudRepository<GitPomFile> {
 }
 ```
 

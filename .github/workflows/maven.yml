@@ -10,7 +10,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" , "dev"]
+    branches: [ "main" , "dev", "feature/*"]
   pull_request:
     branches: [ "main" ]
 
@@ -33,3 +33,5 @@ jobs:
       uses: cicirello/jacoco-badge-generator@v2
       with:
         generate-branches-badge: true
+    - name: IntegrationTest with Maven
+      run: mvn -f integration-test/pom.xml -B clean test -Dogm.user=${{ secrets.USER_GIT_INTEGRATION_TESTING }} -Dogm.password=${{ secrets.TOKEN_GIT_INTEGRATION_TESTING }}

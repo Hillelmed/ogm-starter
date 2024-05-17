@@ -7,7 +7,7 @@ import io.github.hillelmed.ogm.starter.exception.OgmRuntimeException;
 import io.gituhb.hillelmed.ogm.starter.integrationtesting.model.GenericRepo;
 import io.gituhb.hillelmed.ogm.starter.integrationtesting.model.RepoApplicationFile;
 import io.gituhb.hillelmed.ogm.starter.integrationtesting.model.RepoPomFile;
-import io.gituhb.hillelmed.ogm.starter.integrationtesting.repo.GenericRepoRepository;
+import io.gituhb.hillelmed.ogm.starter.integrationtesting.repo.GenericRepoCrudRepository;
 import io.gituhb.hillelmed.ogm.starter.integrationtesting.repo.MyRepoAppForSpesificFile;
 import io.gituhb.hillelmed.ogm.starter.integrationtesting.repo.MyRepoForSpesificFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class IntegrationTestingApplication implements CommandLineRunner {
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         time = System.currentTimeMillis();
-        GenericRepoRepository c = appContext.getBean(GenericRepoRepository.class);
+        GenericRepoCrudRepository c = appContext.getBean(GenericRepoCrudRepository.class);
 
         GenericRepo applicationFile = c.getByRepositoryAndRevision("FaceForwardUtils.git", "test");
         applicationFile.getFiles().remove("tst/operations/popo.md");

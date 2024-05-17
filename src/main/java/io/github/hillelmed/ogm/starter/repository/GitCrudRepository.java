@@ -1,11 +1,11 @@
 package io.github.hillelmed.ogm.starter.repository;
 
 
-public interface GitRepository<T> {
+public interface GitCrudRepository<T> {
 
-    T sync(T t);
+    void sync(T t);
 
-    T update(T t);
+    void update(T t);
 
     T getByRepositoryAndRevision(String repository, String revision);
 

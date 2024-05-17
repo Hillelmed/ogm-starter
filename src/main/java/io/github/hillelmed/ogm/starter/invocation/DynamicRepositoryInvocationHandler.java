@@ -1,7 +1,7 @@
 package io.github.hillelmed.ogm.starter.invocation;
 
 import io.github.hillelmed.ogm.starter.exception.OgmRuntimeException;
-import io.github.hillelmed.ogm.starter.repository.GitRepositoryImpl;
+import io.github.hillelmed.ogm.starter.repository.GitCrudRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -15,10 +15,10 @@ import java.util.Map;
 public class DynamicRepositoryInvocationHandler implements InvocationHandler {
 
     private final Map<String, Method> methods = new HashMap<>();
-    private final GitRepositoryImpl gitRepository;
+    private final GitCrudRepositoryImpl gitRepository;
 
 
-    public DynamicRepositoryInvocationHandler(GitRepositoryImpl gitRepository) {
+    public DynamicRepositoryInvocationHandler(GitCrudRepositoryImpl gitRepository) {
         this.gitRepository = gitRepository;
         for (Method method : gitRepository.getClass().getDeclaredMethods()) {
             if (Modifier.isPublic(method.getModifiers())) {
