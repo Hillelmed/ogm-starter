@@ -73,17 +73,7 @@ public class GitCrudRepositoryImpl<T> implements GitCrudRepository<T> {
             throw new OgmRuntimeException(e);
         }
     }
-
-    @Override
-    public void load(T t) {
-        try {
-            getFileOrMapOfFiles(t);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new OgmRuntimeException(e);
-        }
-    }
-
+    
     private void createFileOrFilesAndSyncDeleteFilesAndPush(T t) {
         createFileOrFilesUpdateAndPush(t, false);
     }

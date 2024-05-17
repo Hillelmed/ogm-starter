@@ -121,7 +121,7 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
         }
         if (Arrays.stream(declaredFields).noneMatch(field -> field.isAnnotationPresent(GitFile.class))
                 && Arrays.stream(declaredFields).noneMatch(field -> field.isAnnotationPresent(GitFiles.class))) {
-            log.error("Model :{} missing GitRevision annotation", t.getName());
+            log.error("Model :{} missing GitFile or GitFiles annotation", t.getName());
             return false;
         }
         return true;
