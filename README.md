@@ -1,12 +1,29 @@
 # OGM (Object Git Mapping)
+# Spring Starter for Object-Git Mapping
 
 ![Alt text](/attachments/OgmExamplePic.png)
 
 **Java Spring starter library that linked your code to Git like ORM**
-
 **Support Java 17 and 21**
 
-## Setup
+## Overview
+This project aims to provide a Spring Starter package that facilitates seamless integration between Spring Boot applications and Git repositories, particularly focusing on object-git mapping. By leveraging this starter, developers can efficiently manage and interact with Git repositories within their Spring applications, abstracting away the complexities of Git operations and object mapping.
+
+## Key Features
+- **Spring Integration**: The starter seamlessly integrates with Spring Boot applications, enabling developers to leverage familiar Spring concepts and patterns.
+- **Object-Git Mapping**: Facilitates mapping between Java objects and Git repository data, simplifying the storage and retrieval of application data from Git.
+- **Git Operations Abstraction**: Abstracts away the intricacies of Git operations such as commits, branches, and merges, providing a more intuitive interface for developers.
+- **Customizable Configuration**: Offers customizable configuration options to adapt to various Git repository structures and requirements.
+- **Efficient Version Control**: Enables efficient version control of application data by leveraging Git's robust versioning capabilities.
+- **Developer Productivity**: Enhances developer productivity by automating common Git-related tasks and reducing boilerplate code.
+
+## Use Cases
+- **Document Management Systems**: Ideal for applications requiring versioned document storage and management, where Git serves as the underlying repository.
+- **Configuration Management**: Useful for managing application configurations stored in Git repositories, providing versioned configuration management capabilities.
+- **Collaborative Development**: Facilitates collaborative development workflows by enabling teams to work on shared codebases with Git-backed storage.
+
+## Getting Started
+To get started with the Spring Starter for Object-Git Mapping, simply include the starter dependency in your Spring Boot project's `pom.xml` or `build.gradle` file. Then, configure the necessary properties to connect to your Git repository, and you're ready to start mapping objects to Git data seamlessly.
 
 Add to your dependencies: (Maven example: Latest release)
 
@@ -128,6 +145,9 @@ Missing
 ### Integration tests settings
 
 Missing
+
+## Contribution
+Contributions to the project are welcome! Whether it's bug fixes, new features, or documentation enhancements, feel free to contribute to make this project even better. Please refer to the project's GitHub repository for contribution guidelines and instructions.
 
 # Additional Resources
 
