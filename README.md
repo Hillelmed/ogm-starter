@@ -1,5 +1,4 @@
-# OGM (Object Git Mapping)
-# Spring Starter for Object-Git Mapping
+# Spring Starter for Object-Git Mapping OGM (Object Git Mapping)
 
 ![Alt text](/attachments/OgmExamplePic.png)
 
