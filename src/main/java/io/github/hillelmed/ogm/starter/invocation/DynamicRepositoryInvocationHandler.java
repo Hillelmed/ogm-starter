@@ -32,8 +32,8 @@ public class DynamicRepositoryInvocationHandler implements InvocationHandler {
         try {
             return methods.get(method.getName()).invoke(gitRepository, args);
         } catch (IllegalAccessException | InvocationTargetException | OgmRuntimeException e) {
-            if (e.getCause() instanceof OgmRuntimeException) {
-                throw new OgmRuntimeException(e.getCause());
+            if (e.getCause() instanceof OgmRuntimeException e1) {
+                throw e1;
             }
             throw new OgmRuntimeException(e);
         }

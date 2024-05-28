@@ -19,9 +19,9 @@ class RepositoryBeanFactoryTest {
     @InjectMocks
     RepositoryBeanFactory repositoryBeanFactory;
 
-    private final String clazzNamePath = "io.github.hillelmed.ogm.starter.config.model.GenericRepoCrudRepository";
-    private final String clazzNamePathWithMissingAnnotations = "io.github.hillelmed.ogm.starter.config.model.MyRepoAppForSpesificFile";
-    private final String clazzNamePathWithImplNotAllowed = "io.github.hillelmed.ogm.starter.config.model.MyRepoAppForSpesificImpleFile";
+    private final String clazzNamePath = "io.github.hillelmed.ogm.starter.data.GenericRepoCrudRepository";
+    private final String clazzNamePathWithMissingAnnotations = "io.github.hillelmed.ogm.starter.data.MyRepoAppForSpesificFile";
+    private final String clazzNamePathWithImplNotAllowed = "io.github.hillelmed.ogm.starter.data.MyRepoAppForSpesificImpleFile";
     @Mock
     private List<String> listOfRepositoriesClass = Mockito.mock(List.class);
     @Mock

@@ -35,6 +35,9 @@ public class GitCrudRepositoryImpl<T> implements GitCrudRepository<T> {
         try {
             createFileOrFilesAndSyncDeleteFilesAndPush(t);
         } catch (Exception e) {
+            if (e instanceof OgmRuntimeException e1) {
+                throw e1;
+            }
             log.error(e.getMessage());
             throw new OgmRuntimeException(e);
         }
@@ -46,6 +49,9 @@ public class GitCrudRepositoryImpl<T> implements GitCrudRepository<T> {
         try {
             createFileOrFilesUpdateAndPush(t, true);
         } catch (Exception e) {
+            if (e instanceof OgmRuntimeException e1) {
+                throw e1;
+            }
             log.error(e.getMessage());
             throw new OgmRuntimeException(e);
         }
@@ -57,6 +63,9 @@ public class GitCrudRepositoryImpl<T> implements GitCrudRepository<T> {
         try {
             return getFileOrMapOfFiles(t);
         } catch (Exception e) {
+            if (e instanceof OgmRuntimeException e1) {
+                throw e1;
+            }
             log.error(e.getMessage());
             throw new OgmRuntimeException(e);
         }
@@ -73,7 +82,7 @@ public class GitCrudRepositoryImpl<T> implements GitCrudRepository<T> {
             throw new OgmRuntimeException(e);
         }
     }
-    
+
     private void createFileOrFilesAndSyncDeleteFilesAndPush(T t) {
         createFileOrFilesUpdateAndPush(t, false);
     }

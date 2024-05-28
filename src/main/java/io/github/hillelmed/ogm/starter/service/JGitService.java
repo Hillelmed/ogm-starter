@@ -192,7 +192,7 @@ public class JGitService {
 
     }
 
-    private void commitMessageAndPush(Git git, OgmConfig ogmConfig) throws GitAPIException {
+    void commitMessageAndPush(Git git, OgmConfig ogmConfig) throws GitAPIException {
         String commitMessage = callAddAndDontHaveDiff(git);
         if (commitMessage == null) {
             return;
@@ -205,7 +205,7 @@ public class JGitService {
         pushCommand.call();
     }
 
-    private String callAddAndDontHaveDiff(Git git) throws GitAPIException {
+    String callAddAndDontHaveDiff(Git git) throws GitAPIException {
         git.add().setUpdate(true).addFilepattern(".").call();
         git.add().addFilepattern(".").call();
         // Get the list of differences (changes)

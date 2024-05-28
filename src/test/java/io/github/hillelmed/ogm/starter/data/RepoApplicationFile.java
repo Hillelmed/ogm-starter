@@ -1,10 +1,9 @@
-package io.github.hillelmed.ogm.starter.config.model;
+package io.github.hillelmed.ogm.starter.data;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.github.hillelmed.ogm.starter.annotation.GitFile;
 import io.github.hillelmed.ogm.starter.annotation.GitModel;
 import io.github.hillelmed.ogm.starter.annotation.GitRepository;
-import io.github.hillelmed.ogm.starter.annotation.GitRevision;
 import io.github.hillelmed.ogm.starter.domain.FileType;
 import lombok.Data;
 
