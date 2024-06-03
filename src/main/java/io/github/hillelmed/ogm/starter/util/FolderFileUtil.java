@@ -15,10 +15,18 @@ import java.nio.file.attribute.DosFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
+/**
+ * The type Folder file util.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
 public class FolderFileUtil {
 
+    /**
+     * Sets writable.
+     *
+     * @param rootDir the root dir
+     */
     public static void setWritable(Path rootDir) {
         try {
             Files.walkFileTree(rootDir, new SimpleFileVisitor<>() {

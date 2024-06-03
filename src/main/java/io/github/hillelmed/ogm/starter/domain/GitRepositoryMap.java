@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+/**
+ * The type Git repository map.
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class GitRepositoryMap extends HashMap<String, String> {
@@ -17,26 +20,55 @@ public class GitRepositoryMap extends HashMap<String, String> {
     private final List<String> keyPathAddedOrChange = new ArrayList<>();
     private final List<String> keyPathDeleted = new ArrayList<>();
 
+    /**
+     * Instantiates a new Git repository map.
+     *
+     * @param initialCapacity the initial capacity
+     * @param loadFactor      the load factor
+     */
     public GitRepositoryMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
     }
 
+    /**
+     * Instantiates a new Git repository map.
+     *
+     * @param initialCapacity the initial capacity
+     */
     public GitRepositoryMap(int initialCapacity) {
         super(initialCapacity);
     }
 
+    /**
+     * Instantiates a new Git repository map.
+     */
     public GitRepositoryMap() {
     }
 
+    /**
+     * Instantiates a new Git repository map.
+     *
+     * @param m the m
+     */
     public GitRepositoryMap(Map<String,String> m) {
         super(m);
         keyPathAddedOrChange.addAll(m.keySet());
     }
 
+    /**
+     * Remove all key path added or change boolean.
+     *
+     * @return the boolean
+     */
     public boolean removeAllKeyPathAddedOrChange() {
         return keyPathAddedOrChange.removeAll(new ArrayList<>(keyPathAddedOrChange));
     }
 
+    /**
+     * Remove all key path deleted boolean.
+     *
+     * @return the boolean
+     */
     public boolean removeAllKeyPathDeleted() {
         return keyPathDeleted.removeAll(new ArrayList<>(keyPathDeleted));
     }

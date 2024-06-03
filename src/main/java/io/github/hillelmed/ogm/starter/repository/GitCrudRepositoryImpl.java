@@ -22,6 +22,11 @@ import java.util.Optional;
 import java.util.UnknownFormatFlagsException;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * The type Git crud repository.
+ *
+ * @param <T> the type parameter
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class GitCrudRepositoryImpl<T> implements GitCrudRepository<T> {

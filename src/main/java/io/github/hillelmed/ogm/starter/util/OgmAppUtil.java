@@ -16,18 +16,49 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * The type Ogm app util.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OgmAppUtil {
 
+    /**
+     * The constant ENDPOINT_PROP.
+     */
     public static final String ENDPOINT_PROP = "ogm.endpoint";
+    /**
+     * The constant ENDPOINT_ENV.
+     */
     public static final String ENDPOINT_ENV = ENDPOINT_PROP.replace('.', '_').toUpperCase();
 
+    /**
+     * The constant GIT_USER_PROP.
+     */
     public static final String GIT_USER_PROP = "ogm.user";
+    /**
+     * The constant GIT_USER_ENV.
+     */
     public static final String GIT_USER_ENV = GIT_USER_PROP.replace('.', '_').toUpperCase();
 
+    /**
+     * The constant GIT_PASSWORD_PROP.
+     */
     public static final String GIT_PASSWORD_PROP = "ogm.password";
+    /**
+     * The constant GIT_PASSWORD_ENV.
+     */
     public static final String GIT_PASSWORD_ENV = GIT_PASSWORD_PROP.replace('.', '_').toUpperCase();
 
+    /**
+     * Find type and write file.
+     *
+     * @param xmlMapper  the xml mapper
+     * @param jsonMapper the json mapper
+     * @param yamlMapper the yaml mapper
+     * @param content    the content
+     * @param path       the path
+     * @throws IOException the io exception
+     */
     public static void findTypeAndWriteFile(XmlMapper xmlMapper,
                                             ObjectMapper jsonMapper,
                                             YAMLMapper yamlMapper,
@@ -41,6 +72,17 @@ public class OgmAppUtil {
         }
     }
 
+    /**
+     * Write file by type.
+     *
+     * @param xmlMapper  the xml mapper
+     * @param jsonMapper the json mapper
+     * @param yamlMapper the yaml mapper
+     * @param fileType   the file type
+     * @param content    the content
+     * @param path       the path
+     * @throws IOException the io exception
+     */
     public static void writeFileByType(XmlMapper xmlMapper,
                                        ObjectMapper jsonMapper,
                                        YAMLMapper yamlMapper,
@@ -88,6 +130,16 @@ public class OgmAppUtil {
         return new PrintWriter(fileWriter);
     }
 
+    /**
+     * Read by type object.
+     *
+     * @param xmlMapper  the xml mapper
+     * @param jsonMapper the json mapper
+     * @param yamlMapper the yaml mapper
+     * @param fileType   the file type
+     * @param string     the string
+     * @return the object
+     */
     public static Object readByType(XmlMapper xmlMapper,
                                     ObjectMapper jsonMapper,
                                     YAMLMapper yamlMapper,
@@ -123,6 +175,12 @@ public class OgmAppUtil {
         }
     }
 
+    /**
+     * Gets file extension.
+     *
+     * @param fileName the file name
+     * @return the file extension
+     */
     public static String getFileExtension(String fileName) {
         if (fileName == null) {
             return "";

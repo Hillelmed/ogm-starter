@@ -26,6 +26,9 @@ import java.util.*;
 
 import static io.github.hillelmed.ogm.starter.util.OgmAppUtil.*;
 
+/**
+ * The type General bean config.
+ */
 @Configuration
 @EnableConfigurationProperties(OgmProperties.class)
 @Slf4j
@@ -35,6 +38,12 @@ public class GeneralBeanConfig {
     private final ClassPathScanningCandidateComponentProvider provider;
     private final ApplicationContext applicationContext;
 
+    /**
+     * Instantiates a new General bean config.
+     *
+     * @param properties         the properties
+     * @param applicationContext the application context
+     */
     public GeneralBeanConfig(OgmProperties properties, ApplicationContext applicationContext) {
         this.properties = properties;
         this.applicationContext = applicationContext;
@@ -54,6 +63,11 @@ public class GeneralBeanConfig {
         });
     }
 
+    /**
+     * Json mapper object mapper.
+     *
+     * @return the object mapper
+     */
     @Bean(name = "jsonMapper")
     @ConditionalOnMissingBean
     public ObjectMapper jsonMapper() {
@@ -61,6 +75,11 @@ public class GeneralBeanConfig {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).enable(SerializationFeature.INDENT_OUTPUT);
     }
 
+    /**
+     * Xml mapper xml mapper.
+     *
+     * @return the xml mapper
+     */
     @Bean(name = "xmlMapper")
     @ConditionalOnMissingBean
     public XmlMapper xmlMapper() {
@@ -71,6 +90,11 @@ public class GeneralBeanConfig {
         return xmlMapper;
     }
 
+    /**
+     * Yaml mapper yaml mapper.
+     *
+     * @return the yaml mapper
+     */
     @Bean(name = "yamlMapper")
     @ConditionalOnMissingBean
     public YAMLMapper yamlMapper() {
@@ -81,6 +105,11 @@ public class GeneralBeanConfig {
         return yamlMapper;
     }
 
+    /**
+     * Ogm config ogm config.
+     *
+     * @return the ogm config
+     */
     @Bean
     @ConditionalOnMissingBean
     public OgmConfig ogmConfig() {
@@ -91,6 +120,11 @@ public class GeneralBeanConfig {
     }
 
 
+    /**
+     * List of repositories class list.
+     *
+     * @return the list
+     */
     @Bean(name = "listOfRepositoriesClass")
     public List<String> listOfRepositoriesClass() {
         try {

@@ -27,6 +27,9 @@ import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The type Repository bean factory.
+ */
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
@@ -48,6 +51,9 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
         this.beanFactory = beanFactory;
     }
 
+    /**
+     * On post construct.
+     */
     @PostConstruct
     public void onPostConstruct() {
         try {
@@ -57,6 +63,11 @@ public class RepositoryBeanFactory implements BeanFactoryAware {
         }
     }
 
+    /**
+     * Load class proxy to bean.
+     *
+     * @param clazzName the clazz name
+     */
     public void loadClassProxyToBean(String clazzName) {
         ConfigurableBeanFactory configurableBeanFactory = (ConfigurableBeanFactory) beanFactory;
         Class<?> clazzTypeTGeneric;

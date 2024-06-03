@@ -44,6 +44,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.github.hillelmed.ogm.starter.util.OgmAppUtil.readByType;
 
+/**
+ * The type J git service.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class JGitService {
@@ -52,6 +55,14 @@ public class JGitService {
     private final XmlMapper xmlMapper;
     private final YAMLMapper yamlMapper;
 
+    /**
+     * Gets git in memory.
+     *
+     * @param credentialsProvider the credentials provider
+     * @param url                 the url
+     * @return the git in memory
+     * @throws GitAPIException the git api exception
+     */
     public Git getGitInMemory(UsernamePasswordCredentialsProvider credentialsProvider, String url) throws GitAPIException {
         DfsRepositoryDescription description = new DfsRepositoryDescription();
         InMemoryRepository inMemoryRepository = new InMemoryRepository(description);
@@ -70,6 +81,15 @@ public class JGitService {
         }
     }
 
+    /**
+     * Load remote git repository map.
+     *
+     * @param git      the git
+     * @param revision the revision
+     * @param include  the include
+     * @return the git repository map
+     * @throws IOException the io exception
+     */
     public GitRepositoryMap loadRemote(Git git, String revision, String[] include) throws IOException {
         TreeWalk treeWalk = loadGit(git, revision);
         InMemoryRepository repo = (InMemoryRepository) git.getRepository();
@@ -102,6 +122,16 @@ public class JGitService {
         return treeWalk;
     }
 
+    /**
+     * Load remote spesific file object.
+     *
+     * @param gitInMemoryRepository the git in memory repository
+     * @param revision              the revision
+     * @param fileType              the file type
+     * @param pathFile              the path file
+     * @return the object
+     * @throws IOException the io exception
+     */
     public Object loadRemoteSpesificFile(Git gitInMemoryRepository, String revision, FileType fileType, String pathFile) throws IOException {
         TreeWalk treeWalk = loadGit(gitInMemoryRepository, revision);
         InMemoryRepository repo = (InMemoryRepository) gitInMemoryRepository.getRepository();
@@ -120,6 +150,17 @@ public class JGitService {
     }
 
 
+    /**
+     * Write file and push.
+     *
+     * @param ogmConfig            the ogm config
+     * @param repositoryFieldValue the repository field value
+     * @param branchFieldValue     the branch field value
+     * @param content              the content
+     * @param gitFileAnnotation    the git file annotation
+     * @param isUpdateExistFile    the is update exist file
+     * @throws IOException the io exception
+     */
     public void writeFileAndPush(OgmConfig ogmConfig, String repositoryFieldValue,
                                  String branchFieldValue,
                                  Object content,
@@ -146,6 +187,16 @@ public class JGitService {
 
     }
 
+    /**
+     * Sync files and push.
+     *
+     * @param ogmConfig            the ogm config
+     * @param repositoryFieldValue the repository field value
+     * @param branchFieldValue     the branch field value
+     * @param contentFiles         the content files
+     * @param isUpdateExistFile    the is update exist file
+     * @throws IOException the io exception
+     */
     public void syncFilesAndPush(OgmConfig ogmConfig, String repositoryFieldValue,
                                  String branchFieldValue,
                                  GitRepositoryMap contentFiles, boolean isUpdateExistFile) throws IOException {
@@ -192,6 +243,13 @@ public class JGitService {
 
     }
 
+    /**
+     * Commit message and push.
+     *
+     * @param git       the git
+     * @param ogmConfig the ogm config
+     * @throws GitAPIException the git api exception
+     */
     void commitMessageAndPush(Git git, OgmConfig ogmConfig) throws GitAPIException {
         String commitMessage = callAddAndDontHaveDiff(git);
         if (commitMessage == null) {
@@ -205,6 +263,13 @@ public class JGitService {
         pushCommand.call();
     }
 
+    /**
+     * Call add and dont have diff string.
+     *
+     * @param git the git
+     * @return the string
+     * @throws GitAPIException the git api exception
+     */
     String callAddAndDontHaveDiff(Git git) throws GitAPIException {
         git.add().setUpdate(true).addFilepattern(".").call();
         git.add().addFilepattern(".").call();

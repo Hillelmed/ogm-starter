@@ -11,6 +11,9 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type Dynamic repository invocation handler.
+ */
 @Slf4j
 public class DynamicRepositoryInvocationHandler implements InvocationHandler {
 
@@ -18,6 +21,11 @@ public class DynamicRepositoryInvocationHandler implements InvocationHandler {
     private final GitCrudRepositoryImpl gitRepository;
 
 
+    /**
+     * Instantiates a new Dynamic repository invocation handler.
+     *
+     * @param gitRepository the git repository
+     */
     public DynamicRepositoryInvocationHandler(GitCrudRepositoryImpl gitRepository) {
         this.gitRepository = gitRepository;
         for (Method method : gitRepository.getClass().getDeclaredMethods()) {

@@ -5,12 +5,19 @@
 
     <groupId>io.github.hillelmed</groupId>
     <artifactId>ogm-starter</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.0.1</version>
+    <description>
+        This project aims to provide a Spring Starter package that facilitates seamless integration between Spring Boot
+        applications and Git repositories, particularly focusing on object-git mapping. By leveraging this starter,
+        developers can efficiently manage and interact with Git repositories within their Spring applications
+    </description>
+    <url>https://github.com/Hillelmed/ogm-starter</url>
+
 
     <scm>
-        <connection>scm:git:git://github.com/hillelmed/ogm.git</connection>
-        <developerConnection>scm:git:git@github.com:Hillelmed/ogm.git</developerConnection>
-        <url>https://github.com/Hillelmed/ogm</url>
+        <connection>scm:git:git://github.com/hillelmed/ogm-starter.git</connection>
+        <developerConnection>scm:git:git@github.com:Hillelmed/ogm-starter.git</developerConnection>
+        <url>https://github.com/Hillelmed/ogm-starter</url>
     </scm>
 
     <licenses>
@@ -191,6 +198,17 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <show>public</show>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>net.ju-n.maven.plugins</groupId>
