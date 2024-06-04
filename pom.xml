@@ -48,7 +48,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>3.2.4</version>
+            <version>3.3.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>ch.qos.logback</groupId>
