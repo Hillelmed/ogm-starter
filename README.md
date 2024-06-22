@@ -31,7 +31,6 @@ Add to your dependencies: (Maven example: Latest release)
   <groupId>io.github.hillelmed</groupId>
   <artifactId>ogm-starter</artifactId>
   <version>X.Y.Z</version>
-  <classifier>sources|tests|javadoc|all</classifier> (Optional)
 </dependency>
 ```
 
